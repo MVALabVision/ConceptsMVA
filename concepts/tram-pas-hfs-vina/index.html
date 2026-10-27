@@ -3,7 +3,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: engineering title block on top, 3D stage with operator controls on the left, operating-flow panel on the right */
 :root{
@@ -11,8 +11,8 @@
   --accent:#0a5bb0; --accent-ink:#ffffff; --accent-soft:#dce9f7;
   --proj:#11a058; --ok:#13854a; --warn:#a86a00; --err:#c4332a;
   --vp-bg:#e8ecf0; --vp-floor:#dde3e9; --vp-grid:#bfc9d3;
-  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
-  --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-display:"Barlow Condensed","Noto Sans KR","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Be Vietnam Pro","Noto Sans KR",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 @media (prefers-color-scheme: dark){
@@ -42,6 +42,12 @@ body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14
 h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(28px,3.4vw,40px);line-height:1.05;letter-spacing:.01em;text-wrap:balance}
 h1 .pas{color:var(--accent)}
 .sub{margin:6px 0 0;color:var(--muted);max-width:70ch}
+.tb-top{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap;margin-bottom:4px}
+.tb-top .eyebrow{margin:0}
+.lang{display:inline-flex;gap:2px;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--surface-2)}
+.lang button{font:600 12px var(--f-body);border:0;background:none;color:var(--muted);border-radius:999px;padding:4px 11px;cursor:pointer;white-space:nowrap}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.lang button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .tb-grid{margin:0;display:grid;grid-template-columns:repeat(2,minmax(130px,auto));border-left:1px solid var(--line)}
 .tb-grid div{padding:9px 16px;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
 .tb-grid div:nth-child(2n){border-right:0}
@@ -170,75 +176,81 @@ footer.foot{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6p
 <div class="page">
   <header class="tb">
     <div class="tb-main">
-      <p class="eyebrow">MVA LAB · Concept đề xuất cho HFS VINA – Innovation Team</p>
-      <h1><span class="pas">PAS</span> · Trạm lắp ráp chiếu sáng có AI kiểm soát</h1>
-      <p class="sub">Mô hình 3D trạm lắp ráp chỉ dẫn bằng máy chiếu, camera AI theo dõi thao tác tay, súng vặn vít kiểm soát lực và truy xuất dữ liệu về MES/SPC. Kéo để xoay, cuộn hoặc chụm hai ngón để phóng to.</p>
+      <div class="tb-top">
+        <p class="eyebrow" data-t="eyebrow">MVA LAB · Concept đề xuất cho HFS VINA – Innovation Team</p>
+        <div class="lang" role="group" aria-label="Ngôn ngữ / 언어">
+          <button type="button" data-lang="vi" lang="vi" aria-pressed="true">Tiếng Việt</button>
+          <button type="button" data-lang="ko" lang="ko" aria-pressed="false">한국어</button>
+        </div>
+      </div>
+      <h1><span class="pas">PAS</span><span data-t="h1"> · Trạm lắp ráp chiếu sáng có AI kiểm soát</span></h1>
+      <p class="sub" data-t="sub">Mô hình 3D trạm lắp ráp chỉ dẫn bằng máy chiếu, camera AI theo dõi thao tác tay, súng vặn vít kiểm soát lực và truy xuất dữ liệu về MES/SPC. Kéo để xoay, cuộn hoặc chụm hai ngón để phóng to.</p>
     </div>
     <dl class="tb-grid">
-      <div><dt>Số bản vẽ</dt><dd>MVA-PAS-HFS-01</dd></div>
-      <div><dt>Phiên bản</dt><dd>Rev A · Concept</dd></div>
-      <div><dt>Ngày</dt><dd>26/10/2026</dd></div>
-      <div><dt>Kích thước trạm</dt><dd>1800×900×2200 mm</dd></div>
+      <div><dt data-t="dwg">Số bản vẽ</dt><dd>MVA-PAS-HFS-01</dd></div>
+      <div><dt data-t="rev">Phiên bản</dt><dd>Rev A · Concept</dd></div>
+      <div><dt data-t="date">Ngày</dt><dd data-t="dateVal">26/10/2026</dd></div>
+      <div><dt data-t="size">Kích thước trạm</dt><dd>1800×900×2200 mm</dd></div>
     </dl>
   </header>
 
   <main class="ws">
-    <section class="stage" aria-label="Mô hình 3D và mô phỏng">
+    <section class="stage" aria-label="Mô hình 3D và mô phỏng" data-t-aria="ariaStage">
       <div class="vp" id="viewport">
         <div class="hud tl">
           <div class="chip" id="chip"><b id="chipNo">BƯỚC 2/7</b><span id="chipName">Chiếu chỉ dẫn lấy linh kiện</span></div>
-          <div class="tower" aria-label="Trạng thái đèn tháp"><i class="r" id="tR"></i><i class="a" id="tA"></i><i class="g" id="tG"></i><span id="tText">Đang chạy</span></div>
+          <div class="tower" aria-label="Trạng thái đèn tháp" data-t-aria="ariaTower"><i class="r" id="tR"></i><i class="a" id="tA"></i><i class="g" id="tG"></i><span id="tText">Đang chạy</span></div>
         </div>
         <div class="labels" id="labels"></div>
         <div class="hud br">
-          <div class="views" role="group" aria-label="Góc nhìn">
-            <button type="button" data-view="overview" aria-pressed="true">Tổng thể</button>
-            <button type="button" data-view="operator" aria-pressed="false">Góc công nhân</button>
-            <button type="button" data-view="top" aria-pressed="false">Từ trên xuống</button>
-            <button type="button" data-view="jig" aria-pressed="false">Đồ gá</button>
-            <button type="button" data-view="cabinet" aria-pressed="false">Tủ điện</button>
+          <div class="views" role="group" aria-label="Góc nhìn" data-t-aria="ariaViews">
+            <button type="button" data-view="overview" aria-pressed="true" data-t="vOverview">Tổng thể</button>
+            <button type="button" data-view="operator" aria-pressed="false" data-t="vOperator">Góc công nhân</button>
+            <button type="button" data-view="top" aria-pressed="false" data-t="vTop">Từ trên xuống</button>
+            <button type="button" data-view="jig" aria-pressed="false" data-t="vJig">Đồ gá</button>
+            <button type="button" data-view="cabinet" aria-pressed="false" data-t="vCabinet">Tủ điện</button>
           </div>
         </div>
-        <div class="hint">Kéo: xoay · Chuột phải: dời · Cuộn: zoom</div>
+        <div class="hint" data-t="hint">Kéo: xoay · Chuột phải: dời · Cuộn: zoom</div>
       </div>
 
       <div class="controls">
         <button type="button" class="btn primary" id="play"><span class="ico" id="playIco">❚❚</span><span id="playTxt">Tạm dừng</span></button>
-        <button type="button" class="btn" id="prev" aria-label="Bước trước">◀</button>
-        <button type="button" class="btn" id="next" aria-label="Bước sau">▶</button>
-        <div class="timeline" id="timeline" aria-label="Tiến trình 7 bước"></div>
-        <select class="speed" id="speed" aria-label="Tốc độ mô phỏng">
-          <option value="0.5">0,5×</option>
+        <button type="button" class="btn" id="prev" aria-label="Bước trước" data-t-aria="prev">◀</button>
+        <button type="button" class="btn" id="next" aria-label="Bước sau" data-t-aria="next">▶</button>
+        <div class="timeline" id="timeline" aria-label="Tiến trình 7 bước" data-t-aria="ariaTimeline"></div>
+        <select class="speed" id="speed" aria-label="Tốc độ mô phỏng" data-t-aria="ariaSpeed">
+          <option value="0.5" data-t="sp05">0,5×</option>
           <option value="1" selected>1×</option>
           <option value="2">2×</option>
         </select>
         <div class="toggles">
-          <label class="tg danger"><input type="checkbox" id="tgErr"> Mô phỏng lấy sai ô</label>
-          <label class="tg"><input type="checkbox" id="tgLabels" checked> Nhãn thiết bị</label>
-          <label class="tg"><input type="checkbox" id="tgFov" checked> Vùng chiếu &amp; camera</label>
-          <label class="tg"><input type="checkbox" id="tgOp" checked> Công nhân</label>
+          <label class="tg danger"><input type="checkbox" id="tgErr"> <span data-t="tgErr">Mô phỏng lấy sai ô</span></label>
+          <label class="tg"><input type="checkbox" id="tgLabels" checked> <span data-t="tgLabels">Nhãn thiết bị</span></label>
+          <label class="tg"><input type="checkbox" id="tgFov" checked> <span data-t="tgFov">Vùng chiếu &amp; camera</span></label>
+          <label class="tg"><input type="checkbox" id="tgOp" checked> <span data-t="tgOp">Công nhân</span></label>
         </div>
       </div>
 
       <div class="tele">
         <dl class="kpis">
-          <div class="kpi"><dt>Sản lượng (mô phỏng)</dt><dd id="kOk">0<small>sp</small></dd></div>
-          <div class="kpi"><dt>Cycle time ước tính</dt><dd>60<small>s/sp</small></dd></div>
-          <div class="kpi err"><dt>Lỗi thao tác đã chặn</dt><dd id="kBlk">0</dd></div>
-          <div class="kpi"><dt>Đạt lần đầu (FPY)</dt><dd>100<small>%</small></dd></div>
+          <div class="kpi"><dt data-t="kOut">Sản lượng (mô phỏng)</dt><dd id="kOk">0<small>sp</small></dd></div>
+          <div class="kpi"><dt data-t="kCt">Cycle time ước tính</dt><dd>60<small data-t="unitCt">s/sp</small></dd></div>
+          <div class="kpi err"><dt data-t="kBlk">Lỗi thao tác đã chặn</dt><dd id="kBlk">0</dd></div>
+          <div class="kpi"><dt data-t="kFpy">Đạt lần đầu (FPY)</dt><dd>100<small>%</small></dd></div>
         </dl>
         <div class="log">
-          <h3>Nhật ký sự kiện trạm · gửi MES</h3>
+          <h3 data-t="logH">Nhật ký sự kiện trạm · gửi MES</h3>
           <ol id="log" aria-live="polite"></ol>
         </div>
       </div>
     </section>
 
-    <aside class="panel" aria-label="Thông tin hệ thống">
+    <aside class="panel" aria-label="Thông tin hệ thống" data-t-aria="ariaPanel">
       <div class="tabs" role="tablist">
-        <button class="tab" role="tab" id="t-flow" aria-controls="p-flow" aria-selected="true">Vận hành</button>
-        <button class="tab" role="tab" id="t-hw" aria-controls="p-hw" aria-selected="false">Phần cứng</button>
-        <button class="tab" role="tab" id="t-sw" aria-controls="p-sw" aria-selected="false">Phần mềm</button>
+        <button class="tab" role="tab" id="t-flow" aria-controls="p-flow" aria-selected="true" data-t="tabFlow">Vận hành</button>
+        <button class="tab" role="tab" id="t-hw" aria-controls="p-hw" aria-selected="false" data-t="tabHw">Phần cứng</button>
+        <button class="tab" role="tab" id="t-sw" aria-controls="p-sw" aria-selected="false" data-t="tabSw">Phần mềm</button>
       </div>
 
       <div class="pane" id="p-flow" role="tabpanel" aria-labelledby="t-flow">
@@ -247,27 +259,27 @@ footer.foot{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6p
       </div>
 
       <div class="pane" id="p-hw" role="tabpanel" aria-labelledby="t-hw" hidden>
-        <h3>7 cụm phần cứng · bấm để xem trên mô hình</h3>
+        <h3 data-t="hwH">7 cụm phần cứng · bấm để xem trên mô hình</h3>
         <ul class="hw" id="hwList"></ul>
       </div>
 
       <div class="pane" id="p-sw" role="tabpanel" aria-labelledby="t-sw" hidden>
-        <h3>Luồng dữ liệu trong trạm</h3>
-        <svg class="arch" viewBox="0 0 360 330" role="img" aria-label="Sơ đồ luồng dữ liệu: thiết bị đầu vào vào Step Engine và AI Vision, điều khiển máy chiếu, HMI, PLC, ghi hồ sơ và gửi MES/SPC">
+        <h3 data-t="swH">Luồng dữ liệu trong trạm</h3>
+        <svg class="arch" viewBox="0 0 360 330" role="img" aria-label="Sơ đồ luồng dữ liệu: thiết bị đầu vào vào Step Engine và AI Vision, điều khiển máy chiếu, HMI, PLC, ghi hồ sơ và gửi MES/SPC" data-t-aria="ariaArch">
           <defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8z"/></marker></defs>
-          <text class="lab" x="10" y="14">Đầu vào</text>
-          <rect class="bx" x="8" y="22" width="104" height="30" rx="5"/><text x="18" y="41">Camera AI ×2</text>
-          <rect class="bx" x="8" y="60" width="104" height="30" rx="5"/><text x="18" y="79">Đầu đọc mã 2D</text>
-          <rect class="bx" x="8" y="98" width="104" height="30" rx="5"/><text x="18" y="117">Súng vặn vít</text>
-          <rect class="bx" x="8" y="136" width="104" height="30" rx="5"/><text x="18" y="155">Cảm biến đồ gá</text>
-          <text class="lab" x="140" y="14">Phần mềm MVA</text>
-          <rect class="core" x="138" y="22" width="104" height="54" rx="6"/><text x="148" y="44">S2 · AI Vision</text><text x="148" y="62" class="lab">tay · vít · mẫu chuẩn</text>
-          <rect class="core" x="138" y="96" width="104" height="70" rx="6"/><text x="148" y="118">S1 · Step Engine</text><text x="148" y="136" class="lab">SOP · trình tự</text><text x="148" y="152" class="lab">khóa bước khi lỗi</text>
-          <text class="lab" x="268" y="14">Đầu ra</text>
-          <rect class="bx" x="266" y="22" width="86" height="30" rx="5"/><text x="276" y="41">Máy chiếu</text>
-          <rect class="bx" x="266" y="60" width="86" height="30" rx="5"/><text x="276" y="79">HMI 21,5"</text>
-          <rect class="bx" x="266" y="98" width="86" height="44" rx="5"/><text x="276" y="117">PLC · đèn tháp</text><text x="276" y="133" class="lab">còi · khóa</text>
-          <rect class="core" x="138" y="200" width="104" height="44" rx="6"/><text x="148" y="219">S3 · Truy xuất</text><text x="148" y="235" class="lab">hồ sơ theo serial</text>
+          <text class="lab" x="10" y="14" data-t="aIn">Đầu vào</text>
+          <rect class="bx" x="8" y="22" width="104" height="30" rx="5"/><text x="18" y="41" data-t="aCam">Camera AI ×2</text>
+          <rect class="bx" x="8" y="60" width="104" height="30" rx="5"/><text x="18" y="79" data-t="aReader">Đầu đọc mã 2D</text>
+          <rect class="bx" x="8" y="98" width="104" height="30" rx="5"/><text x="18" y="117" data-t="aDriver">Súng vặn vít</text>
+          <rect class="bx" x="8" y="136" width="104" height="30" rx="5"/><text x="18" y="155" data-t="aJigSensor">Cảm biến đồ gá</text>
+          <text class="lab" x="140" y="14" data-t="aSw">Phần mềm MVA</text>
+          <rect class="core" x="138" y="22" width="104" height="54" rx="6"/><text x="148" y="44">S2 · AI Vision</text><text x="148" y="62" class="lab" data-t="aS2sub">tay · vít · mẫu chuẩn</text>
+          <rect class="core" x="138" y="96" width="104" height="70" rx="6"/><text x="148" y="118">S1 · Step Engine</text><text x="148" y="136" class="lab" data-t="aS1sub1">SOP · trình tự</text><text x="148" y="152" class="lab" data-t="aS1sub2">khóa bước khi lỗi</text>
+          <text class="lab" x="268" y="14" data-t="aOut">Đầu ra</text>
+          <rect class="bx" x="266" y="22" width="86" height="30" rx="5"/><text x="276" y="41" data-t="aProj">Máy chiếu</text>
+          <rect class="bx" x="266" y="60" width="86" height="30" rx="5"/><text x="276" y="79" data-t="aHmi">HMI 21,5"</text>
+          <rect class="bx" x="266" y="98" width="86" height="44" rx="5"/><text x="276" y="117" data-t="aPlc">PLC · đèn tháp</text><text x="276" y="133" class="lab" data-t="aPlcSub">còi · khóa</text>
+          <rect class="core" x="138" y="200" width="104" height="44" rx="6"/><text x="148" y="219" data-t="aS3">S3 · Truy xuất</text><text x="148" y="235" class="lab" data-t="aS3sub">hồ sơ theo serial</text>
           <rect class="mes" x="138" y="276" width="104" height="44" rx="6"/><text x="148" y="295">MES / SPC HFS</text><text x="148" y="311" class="lab">REST · SQL · OPC UA</text>
           <path class="ln" d="M112 37H138" marker-end="url(#ah)"/>
           <path class="ln" d="M112 75H126V120H138" marker-end="url(#ah)"/>
@@ -281,11 +293,11 @@ footer.foot{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6p
           <path class="ln" d="M190 244V276" marker-end="url(#ah)"/>
         </svg>
         <ul class="hw" id="swList"></ul>
-        <p class="note">Toàn bộ suy luận AI chạy tại IPC của trạm (on-premise), không phụ thuộc internet. Dữ liệu chỉ đi ra mạng nội bộ HFS tới MES/SPC.</p>
+        <p class="note" data-t="note">Toàn bộ suy luận AI chạy tại IPC của trạm (on-premise), không phụ thuộc internet. Dữ liệu chỉ đi ra mạng nội bộ HFS tới MES/SPC.</p>
       </div>
     </aside>
   </main>
-  <footer class="foot"><span>Concept minh họa · kích thước, số ô linh kiện, số vít và giá trị lực là ví dụ, sẽ chốt theo sản phẩm thực tế sau khảo sát.</span><span>MVA LAB VIETNAM · 2026</span></footer>
+  <footer class="foot"><span data-t="foot1">Concept minh họa · kích thước, số ô linh kiện, số vít và giá trị lực là ví dụ, sẽ chốt theo sản phẩm thực tế sau khảo sát.</span><span>MVA LAB VIETNAM · 2026</span></footer>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
@@ -293,67 +305,233 @@ footer.foot{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6p
 <script>
 (function(){
 'use strict';
-if(!window.THREE){ document.getElementById('viewport').insertAdjacentHTML('beforeend','<p style="position:absolute;inset:auto 16px 50% 16px;text-align:center">Không tải được thư viện 3D. Hãy tải lại trang.</p>'); return; }
+/* ---------------- i18n (Tiếng Việt / 한국어) ---------------- */
+const STEP_NUM=[{dur:5,real:6},{dur:3.5,real:4},{dur:4.5,durErr:8,real:5},{dur:4.5,real:12},{dur:8,real:24},{dur:4.5,real:6},{dur:4,real:3}];
+const L10N={
+ vi:{
+  dec:',', sample:'ăâđ', title:'Trạm PAS HFS VINA',
+  ui:{
+   eyebrow:'MVA LAB · Concept đề xuất cho HFS VINA – Innovation Team', h1:' · Trạm lắp ráp chiếu sáng có AI kiểm soát',
+   sub:'Mô hình 3D trạm lắp ráp chỉ dẫn bằng máy chiếu, camera AI theo dõi thao tác tay, súng vặn vít kiểm soát lực và truy xuất dữ liệu về MES/SPC. Kéo để xoay, cuộn hoặc chụm hai ngón để phóng to.',
+   dwg:'Số bản vẽ', rev:'Phiên bản', date:'Ngày', dateVal:'26/10/2026', size:'Kích thước trạm',
+   ariaStage:'Mô hình 3D và mô phỏng', ariaTower:'Trạng thái đèn tháp', ariaViews:'Góc nhìn', ariaModel:'Mô hình 3D trạm PAS',
+   vOverview:'Tổng thể', vOperator:'Góc công nhân', vTop:'Từ trên xuống', vJig:'Đồ gá', vCabinet:'Tủ điện',
+   hint:'Kéo: xoay · Chuột phải: dời · Cuộn: zoom', pause:'Tạm dừng', play:'Chạy mô phỏng', prev:'Bước trước', next:'Bước sau',
+   ariaTimeline:'Tiến trình 7 bước', ariaSpeed:'Tốc độ mô phỏng', sp05:'0,5×',
+   tgErr:'Mô phỏng lấy sai ô', tgLabels:'Nhãn thiết bị', tgFov:'Vùng chiếu & camera', tgOp:'Công nhân',
+   kOut:'Sản lượng (mô phỏng)', unit:'sp', kCt:'Cycle time ước tính', unitCt:'s/sp', kBlk:'Lỗi thao tác đã chặn', kFpy:'Đạt lần đầu (FPY)',
+   logH:'Nhật ký sự kiện trạm · gửi MES', ariaPanel:'Thông tin hệ thống', tabFlow:'Vận hành', tabHw:'Phần cứng', tabSw:'Phần mềm',
+   hwH:'7 cụm phần cứng · bấm để xem trên mô hình', swH:'Luồng dữ liệu trong trạm',
+   ariaArch:'Sơ đồ luồng dữ liệu: thiết bị đầu vào vào Step Engine và AI Vision, điều khiển máy chiếu, HMI, PLC, ghi hồ sơ và gửi MES/SPC',
+   aIn:'Đầu vào', aCam:'Camera AI ×2', aReader:'Đầu đọc mã 2D', aDriver:'Súng vặn vít', aJigSensor:'Cảm biến đồ gá', aSw:'Phần mềm MVA',
+   aS2sub:'tay · vít · mẫu chuẩn', aS1sub1:'SOP · trình tự', aS1sub2:'khóa bước khi lỗi', aOut:'Đầu ra', aProj:'Máy chiếu', aHmi:'HMI 21,5"',
+   aPlc:'PLC · đèn tháp', aPlcSub:'còi · khóa', aS3:'S3 · Truy xuất', aS3sub:'hồ sơ theo serial',
+   note:'Toàn bộ suy luận AI chạy tại IPC của trạm (on-premise), không phụ thuộc internet. Dữ liệu chỉ đi ra mạng nội bộ HFS tới MES/SPC.',
+   foot1:'Concept minh họa · kích thước, số ô linh kiện, số vít và giá trị lực là ví dụ, sẽ chốt theo sản phẩm thực tế sau khảo sát.',
+   noThree:'Không tải được thư viện 3D. Hãy tải lại trang.', noWebgl:'Trình duyệt này không bật được WebGL nên không hiển thị mô hình 3D.',
+   chipStep:n=>`BƯỚC ${n}/7`, chipErr:'Lấy sai ô B3 · đã khóa bước', stepAria:(n,name)=>`Bước ${n}: ${name}`,
+   tower:{r:'Lỗi · khóa bước',a:'Chờ lệnh',g:'Đang chạy'}, paper:'PHIẾU CÔNG ĐOẠN'
+  },
+  steps:[
+   {name:'Quét lệnh & tải SOP',actors:['H5 đầu đọc 2D','H4 IPC/HMI','S3 MES'],
+    desc:'Công nhân quét mã 2D trên phiếu công đoạn. IPC hỏi MES và nhận về BOM, SOP đúng phiên bản và tham số lực siết của model.',
+    roles:[['Đầu đọc 2D','Đọc mã lệnh WO-261026-0153 trên phiếu công đoạn.'],['MES','Trả về model HX-BR200, BOM, SOP v3.2, lực siết 0,50 N·m ±10%.'],['HMI','Hiển thị model, serial, danh sách 7 bước.'],['Đèn tháp','Vàng (chờ lệnh) chuyển sang xanh (đang chạy).']]},
+   {name:'Chiếu chỉ dẫn lấy linh kiện',actors:['H1 máy chiếu','S1 Step Engine','H2 camera'],
+    desc:'Máy chiếu rọi khung sáng vào đúng ô linh kiện, vẽ mũi tên trên tấm chiếu và ghi nội dung bước ngay trên mặt bàn.',
+    roles:[['Máy chiếu','Rọi sáng ô B2, mũi tên trên tấm chiếu, nội dung bước trên bàn.'],['Camera AI','Bật vùng nhận dạng (pick zone) của ô B2.'],['HMI','Ảnh linh kiện khung đỡ BR-02, số lượng 1.']]},
+   {name:'AI xác nhận thao tác tay',actors:['H2 camera','S2 AI Vision','H6 PLC/đèn tháp'],
+    desc:'Camera AI theo dõi bàn tay. Tay đi vào đúng vùng lấy thì bước được xác nhận tự động, không cần bấm nút.',
+    descErr:'Tay đi vào ô B3 (sai linh kiện). PLC bật đèn đỏ và còi, Step Engine khóa bước. Khi tay rút ra và vào đúng ô B2, hệ thống tự mở khóa.',
+    roles:[['Camera AI','Nhận diện bàn tay 30 khung hình/giây, kiểm tra tay nằm trong vùng B2.'],['Step Engine','Xác nhận bước, chuyển sang bước lắp.'],['Dữ liệu','Ghi thời điểm lấy linh kiện.']],
+    rolesErr:[['Camera AI','Phát hiện tay trong vùng B3, không phải B2.'],['PLC/đèn tháp','Đèn đỏ nhấp nháy, còi kêu, khóa bước.'],['Máy chiếu','Ô B3 đỏ, ô B2 xanh, chữ cảnh báo trên bàn.'],['Dữ liệu','Lưu sự kiện “lỗi đã chặn” kèm ảnh để phân tích.']]},
+   {name:'Lắp vào đồ gá theo hình chiếu',actors:['H1 máy chiếu','H7 đồ gá','S1 Step Engine'],
+    desc:'Đường viền vị trí và mũi tên hướng lắp được chiếu thẳng lên sản phẩm. Cảm biến trên đồ gá xác nhận chi tiết đã nằm đúng chỗ.',
+    roles:[['Máy chiếu','Viền nét đứt đúng vị trí đặt khung đỡ và mũi tên hướng lắp.'],['Đồ gá','Cảm biến hiện diện S1 chuyển ON.'],['HMI','Video thao tác mẫu của công nhân lành nghề.']]},
+   {name:'Siết vít kiểm soát lực',actors:['H5 súng vặn vít','H6 PLC','S2 đếm vít'],
+    desc:'Thứ tự 4 vít được chiếu lên sản phẩm. Súng vặn vít trả tín hiệu OK/NG kèm giá trị lực; đủ 4/4 vít OK mới cho sang bước.',
+    roles:[['Máy chiếu','Vòng tròn đánh số 1→2→3→4 tại từng lỗ vít, vít xong chuyển xanh.'],['Súng vặn vít','Ngắt theo lực, gửi OK/NG và giá trị N·m.'],['PLC','Đếm vít, chặn nếu thiếu vít hoặc NG.'],['Dữ liệu','Lưu lực siết từng vít theo serial.']]},
+   {name:'Kiểm tra Poka-Yoke bằng AI',actors:['H2 camera 12 MP','H3 đèn dome','S2 AI Vision'],
+    desc:'Camera 12 MP chụp dưới đèn dome, so với ảnh mẫu chuẩn: đủ vít, đúng chi tiết, đúng hướng. Tỷ lệ phù hợp đạt ngưỡng thì ĐẠT.',
+    roles:[['Đèn dome','Bật sáng đều vùng sản phẩm khi chụp.'],['Camera AI','So sánh mẫu chuẩn: 98,7% ≥ ngưỡng 95%.'],['Nếu NG','Đèn đỏ, giữ sản phẩm trên đồ gá, chiếu vị trí lỗi.']]},
+   {name:'Lưu hồ sơ & gửi MES/SPC',actors:['H4 IPC','S3 Truy xuất','MES/SPC'],
+    desc:'Hồ sơ theo serial gồm người làm, thời gian từng bước, lực siết từng vít và ảnh kiểm tra được lưu và gửi MES; biểu đồ SPC cập nhật.',
+    roles:[['Truy xuất','Lưu hồ sơ SN, 7 bước, 4 giá trị lực, 2 ảnh.'],['MES/SPC','Nhận kết quả OK, cập nhật Cpk lực siết.'],['Đèn tháp','Xanh, sẵn sàng sản phẩm kế tiếp.']]}
+  ],
+  hw:[
+   {k:'H1',n:'Máy chiếu dẫn hướng (Workguide/SOP)',a:'proj',s:['Laser short-throw WUXGA, ≥ 4.000 ANSI lumen, ~20.000 h','Chiếu lên kệ linh kiện, tấm chiếu và trực tiếp lên sản phẩm','Giá treo chỉnh 6 bậc, khung bù méo hình']},
+   {k:'H2',n:'Camera AI nhận diện ×2',a:'cam',s:['CAM-1 5 MP: theo dõi tay toàn vùng thao tác, 30 fps','CAM-2 12 MP: kiểm tra Poka-Yoke và ngoại quan cuối','Ống kính công nghiệp méo thấp, cáp khóa vít']},
+   {k:'H3',n:'Đèn chiếu sáng phụ',a:'led',s:['2 đèn LED bar 600 mm chiếu đều bàn và kệ','Đèn dome/vòng cho vùng kiểm tra cuối','Bộ điều khiển đèn có trigger từ IPC']},
+   {k:'H4',n:'Máy tính IPC & màn hình HMI',a:'hmi',s:['IPC Core i7, 32 GB, GPU NVIDIA RTX 8 GB cho AI','HMI cảm ứng 21,5" + màn hình 2 cho video/live camera','UPS online 1,5 kVA']},
+   {k:'H5',n:'Ngoại vi & Poka-Yoke',a:'peri',s:['Đầu đọc mã 2D công nghiệp có chân đế','2 súng vặn vít điện kiểm soát lực, tín hiệu OK/NG + bộ đếm vít','Balancer treo súng, cảm biến hiện diện trên đồ gá']},
+   {k:'H6',n:'Tủ điện PLC/IO & cảnh báo',a:'plc',s:['PLC mini hoặc Remote I/O Ethernet','Đèn tháp 3 màu có còi, nút dừng khẩn cấp, Start/Reset','Tủ điện 24 VDC, CB, relay an toàn']},
+   {k:'H7',n:'Khung bàn thao tác ESD & đồ gá',a:'jig',s:['Nhôm định hình 1800×900×850 mm, khung trên 2200 mm','Thảm ESD nối đất, kệ 3 tầng 18 hộp linh kiện, tấm chiếu trắng','Đồ gá định vị theo model, chốt và cảm biến']}
+  ],
+  sw:[
+   {k:'S1',n:'Module chỉ dẫn người lắp ráp',s:['Soạn SOP không cần lập trình: ảnh tham chiếu → vị trí hiển thị → vùng nhận dạng → trình tự','Chiếu nội dung theo từng bước, video thao tác mẫu','Quản lý phiên bản SOP theo model, đăng nhập công nhân, giao diện Việt/Anh/Hàn']},
+   {k:'S2',n:'Hiệu chuẩn máy chiếu & AI Vision',s:['Hiệu chuẩn camera–máy chiếu tự động bằng mẫu chiếu, bù méo','Nhận diện bàn tay và vùng lấy, đếm vít, kiểm tra đủ/đúng/hướng','So sánh mẫu chuẩn, ngưỡng chỉnh theo sản phẩm, chạy GPU tại trạm']},
+   {k:'S3',n:'Truy xuất nguồn gốc & kết nối MES/SPC',s:['Hồ sơ theo serial: người làm, thời gian từng bước, lực siết, ảnh','Dashboard thời gian thực, báo cáo năng suất và lỗi','Kết nối MES của HFS (REST/SQL/OPC UA), biểu đồ SPC, Cp/Cpk']}
+  ],
+  anchors:{proj:'Máy chiếu dẫn hướng',cam:'Camera AI ×2',led:'Đèn LED bar / dome',hmi:'IPC & HMI',peri:'Đầu đọc 2D & súng vặn vít',plc:'PLC/IO & đèn tháp',jig:'Bàn ESD & đồ gá',mes:'Server MES/SPC (HFS)'},
+  table:{
+   loaded:['ĐÃ TẢI SOP v3.2',['Model HX-BR200 · Lệnh WO-261026-0153','7 bước · Lực siết 0,50 N·m ±10%']],
+   scan:['QUÉT MÃ LỆNH SẢN XUẤT',['Đưa mã 2D trên phiếu công đoạn vào vùng quét']],
+   pick:['BƯỚC 2/7 · LẤY LINH KIỆN',['1 × Khung đỡ BR-02','tại ô B2 (đang sáng)']],
+   wrong:['SAI Ô LINH KIỆN!',['Rút tay khỏi ô B3','Lấy khung đỡ tại ô B2']],
+   pickedOk:'ĐÃ LẤY ĐÚNG ✓', pickRight:'BƯỚC 3/7 · LẤY ĐÚNG Ô', pickLines:['Camera AI đang xác nhận thao tác tay','Ô B2 · Khung đỡ BR-02'],
+   placed:['ĐÚNG VỊ TRÍ ✓',['Cảm biến đồ gá S1: ON','Chuẩn bị siết vít']],
+   place:['BƯỚC 4/7 · LẮP KHUNG ĐỠ',['Đặt BR-02 vào viền sáng trên sản phẩm','Mép gấp hướng sang hai bên']],
+   screw:'BƯỚC 5/7 · SIẾT 4 VÍT M3', screwL1:'Theo thứ tự 1 → 2 → 3 → 4 · 0,50 N·m', screwL2:n=>`Đã siết ${n}/4 vít OK`,
+   passed:['AI: ĐẠT 98,7%',['Đủ 4 vít · đúng chi tiết · đúng hướng','Ngưỡng ≥ 95%']],
+   inspect:['BƯỚC 6/7 · AI KIỂM TRA',['Giữ tay ngoài vùng chụp','Camera 12 MP đang so mẫu chuẩn']],
+   done:'HOÀN THÀNH ✓', doneL1:sn=>'Đã lưu hồ sơ SN '+sn, doneL2:'Gửi MES/SPC · lấy sản phẩm ra'
+  },
+  panel:{station:'PAS · TRẠM 01', waiting:'Chờ lệnh sản xuất', loaded:'Đã tải SOP v3.2 · 7 bước', scan:'Quét mã 2D trên phiếu công đoạn', b3wrong:'B3 ✕ SAI',
+   wrong:'SAI Ô! Lấy khung đỡ BR-02 tại ô B2', picked:'Đã lấy đúng · chuyển sang lắp', pick:'LẤY 1 × KHUNG ĐỠ BR-02 · Ô B2',
+   place:'Bước 4/7 · Đặt khung đỡ vào viền sáng trên sản phẩm', screw:n=>`Bước 5/7 · Siết vít 1→2→3→4 · ${n}/4 OK`,
+   passed:'AI kiểm tra: ĐẠT 98,7%', inspect:'Bước 6/7 · AI đang kiểm tra, giữ tay ngoài vùng chụp', done:'HOÀN THÀNH · Hồ sơ đã gửi MES/SPC'},
+  hmi:{header:'PROJECTION ASSEMBLY SYSTEM · TRẠM 01', waiting:'Chờ quét lệnh sản xuất…', part:'BR-02 · SL 1 · ô B2', sop:n=>'SOP v3.2 · bước '+n+'/7',
+   torque:'Lực siết (N·m) · mục tiêu 0,50 ±0,05', screw:n=>'Vít '+n, wait:'chờ', aiPass:'AI: ĐẠT 98,7%', aiWait:'AI: chờ', output:'Sản lượng ca: ', blocked:'Lỗi đã chặn: '},
+  live:{cam2:'CAM-2 · 12 MP · KIỂM TRA POKA-YOKE', cam1:'CAM-1 · 5 MP · AI THEO DÕI TAY · 30 FPS', screw:'vít 0.99', orient:'BR-02 đúng hướng 0.99',
+   match:'TỶ LỆ PHÙ HỢP 98,7% ≥ 95% · ĐẠT', wrong:'SAI Ô: tay trong vùng B3, yêu cầu B2 → khóa bước', confirm:'XÁC NHẬN: tay trái trong vùng B2 · conf 0.97'},
+  log:{kind:{info:'INFO',ok:'OK',err:'LỖI',data:'MES'},
+   e0:'Quét WO-261026-0153 → MES trả BOM, SOP v3.2, lực 0,50 N·m', e1:'Chiếu chỉ dẫn → ô B2 · khung đỡ BR-02 × 1',
+   e2ok:'CAM-1: tay trái trong vùng B2 (0.97) → xác nhận', e2err:'CAM-1: tay trong ô B3, SAI linh kiện → đèn đỏ + còi, khóa bước', e2unlock:'Tay vào đúng ô B2 → mở khóa bước',
+   e3:'Đồ gá S1 ON · khung đỡ đúng vị trí', e4:(k,tq)=>`Vít ${k}/4 · ${tq} N·m · OK`, e5:'CAM-2: tỷ lệ phù hợp 98,7% ≥ 95% → ĐẠT',
+   e6a:sn=>`Lưu hồ sơ SN ${sn} · 7 bước, 4 lực siết, 2 ảnh`, e6b:'Gửi MES/SPC · cập nhật biểu đồ lực siết',
+   step:(n,name)=>`Bước ${n}/7 · ${name}`, errOn:'Bật mô phỏng lỗi: công nhân sẽ lấy sai ô B3 ở bước 3', errOff:'Tắt mô phỏng lỗi', shift:'Bắt đầu ca · đăng nhập NV-0217'}
+ },
+ ko:{
+  dec:'.', sample:'가나다', title:'PAS 스테이션 HFS VINA',
+  ui:{
+   eyebrow:'MVA LAB · HFS VINA 제안 컨셉 – Innovation Team', h1:' · AI 감시형 프로젝션 조립 스테이션',
+   sub:'프로젝터로 작업을 안내하고, AI 카메라가 손동작을 추적하며, 토크 제어 전동 드라이버와 MES/SPC 데이터 추적을 갖춘 조립 스테이션의 3D 모델입니다. 드래그로 회전, 스크롤 또는 두 손가락 핀치로 확대할 수 있습니다.',
+   dwg:'도면 번호', rev:'리비전', date:'날짜', dateVal:'2026-10-26', size:'스테이션 크기',
+   ariaStage:'3D 모델 및 시뮬레이션', ariaTower:'타워램프 상태', ariaViews:'시점', ariaModel:'PAS 스테이션 3D 모델',
+   vOverview:'전체 보기', vOperator:'작업자 시점', vTop:'상면도', vJig:'지그', vCabinet:'제어반',
+   hint:'드래그: 회전 · 우클릭: 이동 · 스크롤: 확대/축소', pause:'일시정지', play:'시뮬레이션 실행', prev:'이전 단계', next:'다음 단계',
+   ariaTimeline:'7단계 진행', ariaSpeed:'시뮬레이션 속도', sp05:'0.5×',
+   tgErr:'오피킹 오류 시뮬레이션', tgLabels:'장비 라벨', tgFov:'투영 영역 & 카메라', tgOp:'작업자',
+   kOut:'생산량 (시뮬레이션)', unit:'개', kCt:'예상 사이클 타임', unitCt:'초/개', kBlk:'차단된 작업 오류', kFpy:'초도 합격률 (FPY)',
+   logH:'스테이션 이벤트 로그 · MES 전송', ariaPanel:'시스템 정보', tabFlow:'운영', tabHw:'하드웨어', tabSw:'소프트웨어',
+   hwH:'하드웨어 7개 모듈 · 클릭하면 모델에서 확인', swH:'스테이션 내 데이터 흐름',
+   ariaArch:'데이터 흐름도: 입력 장치가 Step Engine과 AI Vision으로 연결되고, 프로젝터·HMI·PLC를 제어하며, 기록을 저장하고 MES/SPC로 전송',
+   aIn:'입력', aCam:'AI 카메라 ×2', aReader:'2D 코드 리더', aDriver:'전동 드라이버', aJigSensor:'지그 센서', aSw:'MVA 소프트웨어',
+   aS2sub:'손 · 나사 · 기준 이미지', aS1sub1:'SOP · 작업 순서', aS1sub2:'오류 시 단계 잠금', aOut:'출력', aProj:'프로젝터', aHmi:'HMI 21.5"',
+   aPlc:'PLC · 타워램프', aPlcSub:'부저 · 인터록', aS3:'S3 · 이력 추적', aS3sub:'시리얼별 기록',
+   note:'모든 AI 추론은 스테이션 IPC(온프레미스)에서 실행되며 인터넷에 의존하지 않습니다. 데이터는 HFS 내부망을 통해 MES/SPC로만 전송됩니다.',
+   foot1:'예시 컨셉 · 치수, 부품 빈 수, 나사 수, 토크 값은 예시이며 현장 조사 후 실제 제품에 맞춰 확정합니다.',
+   noThree:'3D 라이브러리를 불러오지 못했습니다. 페이지를 새로고침하세요.', noWebgl:'이 브라우저에서는 WebGL을 사용할 수 없어 3D 모델을 표시할 수 없습니다.',
+   chipStep:n=>`단계 ${n}/7`, chipErr:'B3 빈 오피킹 · 단계 잠금됨', stepAria:(n,name)=>`단계 ${n}: ${name}`,
+   tower:{r:'오류 · 단계 잠금',a:'지시 대기',g:'가동 중'}, paper:'공정 작업표'
+  },
+  steps:[
+   {name:'작업지시 스캔 & SOP 로드',actors:['H5 2D 리더','H4 IPC/HMI','S3 MES'],
+    desc:'작업자가 공정 작업표의 2D 코드를 스캔합니다. IPC가 MES에 조회하여 BOM, 해당 버전의 SOP, 모델별 체결 토크 파라미터를 받습니다.',
+    roles:[['2D 리더','공정 작업표의 작업지시 코드 WO-261026-0153 판독.'],['MES','모델 HX-BR200, BOM, SOP v3.2, 체결 토크 0.50 N·m ±10% 회신.'],['HMI','모델, 시리얼, 7단계 목록 표시.'],['타워램프','황색(지시 대기)에서 녹색(가동 중)으로 전환.']]},
+   {name:'부품 피킹 안내 투영',actors:['H1 프로젝터','S1 Step Engine','H2 카메라'],
+    desc:'프로젝터가 정확한 부품 빈에 빛 프레임을 비추고, 투영판에 화살표를 그리며 작업대 위에 단계 내용을 표시합니다.',
+    roles:[['프로젝터','B2 빈 조명, 투영판 화살표, 작업대 위 단계 내용.'],['AI 카메라','B2 빈의 인식 영역(pick zone) 활성화.'],['HMI','브래킷 BR-02 부품 이미지, 수량 1.']]},
+   {name:'AI 손동작 확인',actors:['H2 카메라','S2 AI Vision','H6 PLC/타워램프'],
+    desc:'AI 카메라가 손을 추적합니다. 손이 올바른 피킹 영역에 들어가면 버튼 조작 없이 단계가 자동으로 확인됩니다.',
+    descErr:'손이 B3 빈(잘못된 부품)에 들어갔습니다. PLC가 적색등과 부저를 켜고 Step Engine이 단계를 잠급니다. 손을 빼서 올바른 B2 빈에 넣으면 자동으로 잠금이 해제됩니다.',
+    roles:[['AI 카메라','초당 30프레임으로 손 인식, 손이 B2 영역 안에 있는지 확인.'],['Step Engine','단계 확인 후 조립 단계로 전환.'],['데이터','부품 피킹 시각 기록.']],
+    rolesErr:[['AI 카메라','B2가 아닌 B3 영역에서 손 감지.'],['PLC/타워램프','적색등 점멸, 부저 작동, 단계 잠금.'],['프로젝터','B3 빈 적색, B2 빈 녹색, 작업대에 경고 문구 표시.'],['데이터','분석용 이미지와 함께 “차단된 오류” 이벤트 저장.']]},
+   {name:'투영 안내에 따라 지그에 조립',actors:['H1 프로젝터','H7 지그','S1 Step Engine'],
+    desc:'위치 윤곽선과 조립 방향 화살표가 제품 위에 직접 투영됩니다. 지그의 센서가 부품이 제자리에 놓였는지 확인합니다.',
+    roles:[['프로젝터','브래킷 장착 위치의 점선 윤곽과 조립 방향 화살표.'],['지그','재석 센서 S1이 ON으로 전환.'],['HMI','숙련 작업자의 표준 작업 영상.']]},
+   {name:'토크 제어 나사 체결',actors:['H5 전동 드라이버','H6 PLC','S2 나사 카운트'],
+    desc:'4개 나사의 체결 순서가 제품 위에 투영됩니다. 전동 드라이버가 토크 값과 함께 OK/NG 신호를 보내며, 4/4 나사가 모두 OK여야 다음 단계로 진행합니다.',
+    roles:[['프로젝터','각 나사 구멍에 1→2→3→4 번호 원 표시, 체결 완료 시 녹색으로 전환.'],['전동 드라이버','설정 토크 도달 시 정지, OK/NG와 N·m 값 전송.'],['PLC','나사 카운트, 누락 또는 NG 시 차단.'],['데이터','시리얼별 나사 토크 저장.']]},
+   {name:'AI 포카요케 검사',actors:['H2 12 MP 카메라','H3 돔 조명','S2 AI Vision'],
+    desc:'12 MP 카메라가 돔 조명 아래에서 촬영하여 기준 이미지와 비교합니다: 나사 전수, 올바른 부품, 올바른 방향. 일치율이 임계값 이상이면 합격입니다.',
+    roles:[['돔 조명','촬영 시 제품 영역을 균일하게 조명.'],['AI 카메라','기준 이미지 비교: 98.7% ≥ 임계값 95%.'],['NG 시','적색등, 제품을 지그에 유지, 불량 위치 투영.']]},
+   {name:'기록 저장 & MES/SPC 전송',actors:['H4 IPC','S3 이력 추적','MES/SPC'],
+    desc:'작업자, 단계별 시간, 나사별 토크, 검사 이미지가 포함된 시리얼별 기록을 저장하고 MES로 전송하며 SPC 차트가 갱신됩니다.',
+    roles:[['이력 추적','SN 기록 저장: 7단계, 토크 4건, 이미지 2장.'],['MES/SPC','OK 결과 수신, 체결 토크 Cpk 갱신.'],['타워램프','녹색, 다음 제품 준비 완료.']]}
+  ],
+  hw:[
+   {k:'H1',n:'안내 프로젝터 (Workguide/SOP)',a:'proj',s:['단초점 레이저 WUXGA, ≥ 4,000 ANSI 루멘, 약 20,000시간','부품 선반, 투영판, 제품 위에 직접 투영','6축 조절 마운트, 키스톤 보정 프레임']},
+   {k:'H2',n:'AI 인식 카메라 ×2',a:'cam',s:['CAM-1 5 MP: 작업 영역 전체 손 추적, 30 fps','CAM-2 12 MP: 포카요케 및 최종 외관 검사','저왜곡 산업용 렌즈, 나사 고정식 케이블']},
+   {k:'H3',n:'보조 조명',a:'led',s:['600 mm LED 바 2개로 작업대와 선반 균일 조명','최종 검사 영역용 돔/링 조명','IPC 트리거 지원 조명 컨트롤러']},
+   {k:'H4',n:'IPC & HMI 모니터',a:'hmi',s:['IPC Core i7, 32 GB, AI용 NVIDIA RTX 8 GB GPU','21.5" 터치 HMI + 영상/라이브 카메라용 보조 모니터','온라인 UPS 1.5 kVA']},
+   {k:'H5',n:'주변장치 & 포카요케',a:'peri',s:['거치대 포함 산업용 2D 코드 리더','토크 제어 전동 드라이버 2대, OK/NG 신호 + 나사 카운터','드라이버 밸런서, 지그 재석 센서']},
+   {k:'H6',n:'PLC/IO 제어반 & 경보',a:'plc',s:['미니 PLC 또는 이더넷 리모트 I/O','부저 내장 3색 타워램프, 비상정지, Start/Reset 버튼','24 VDC 제어반, 차단기, 안전 릴레이']},
+   {k:'H7',n:'ESD 작업대 프레임 & 지그',a:'jig',s:['알루미늄 프로파일 1800×900×850 mm, 상부 프레임 2200 mm','접지 ESD 매트, 3단 선반 부품 빈 18개, 백색 투영판','모델별 위치결정 지그, 핀 및 센서']}
+  ],
+  sw:[
+   {k:'S1',n:'작업자 안내 모듈',s:['코딩 없는 SOP 작성: 기준 이미지 → 표시 위치 → 인식 영역 → 순서','단계별 내용 투영, 표준 작업 영상','모델별 SOP 버전 관리, 작업자 로그인, 베트남어/영어/한국어 UI']},
+   {k:'S2',n:'프로젝터 캘리브레이션 & AI Vision',s:['투영 패턴을 이용한 카메라–프로젝터 자동 캘리브레이션, 왜곡 보정','손 및 피킹 영역 인식, 나사 카운트, 수량/종류/방향 검사','기준 이미지 비교, 제품별 임계값 조정, 스테이션 GPU에서 실행']},
+   {k:'S3',n:'이력 추적 & MES/SPC 연동',s:['시리얼별 기록: 작업자, 단계별 시간, 체결 토크, 이미지','실시간 대시보드, 생산성 및 불량 리포트','HFS MES 연동 (REST/SQL/OPC UA), SPC 차트, Cp/Cpk']}
+  ],
+  anchors:{proj:'안내 프로젝터',cam:'AI 카메라 ×2',led:'LED 바 / 돔 조명',hmi:'IPC & HMI',peri:'2D 리더 & 전동 드라이버',plc:'PLC/IO & 타워램프',jig:'ESD 작업대 & 지그',mes:'MES/SPC 서버 (HFS)'},
+  table:{
+   loaded:['SOP v3.2 로드 완료',['모델 HX-BR200 · 작업지시 WO-261026-0153','7단계 · 체결 토크 0.50 N·m ±10%']],
+   scan:['작업지시 코드 스캔',['공정 작업표의 2D 코드를 스캔 영역에 대 주세요']],
+   pick:['단계 2/7 · 부품 피킹',['1 × 브래킷 BR-02','B2 빈 (점등 중)']],
+   wrong:['잘못된 부품 빈!',['B3 빈에서 손을 빼세요','B2 빈에서 브래킷을 집으세요']],
+   pickedOk:'올바르게 피킹 ✓', pickRight:'단계 3/7 · 올바른 빈에서 피킹', pickLines:['AI 카메라가 손동작을 확인 중','B2 빈 · 브래킷 BR-02'],
+   placed:['정위치 ✓',['지그 센서 S1: ON','나사 체결 준비']],
+   place:['단계 4/7 · 브래킷 조립',['제품 위 빛 윤곽선 안에 BR-02 장착','접힌 가장자리가 양옆을 향하도록']],
+   screw:'단계 5/7 · M3 나사 4개 체결', screwL1:'순서 1 → 2 → 3 → 4 · 0.50 N·m', screwL2:n=>`나사 ${n}/4 체결 OK`,
+   passed:['AI: 합격 98.7%',['나사 4개 · 올바른 부품 · 올바른 방향','임계값 ≥ 95%']],
+   inspect:['단계 6/7 · AI 검사',['촬영 영역 밖으로 손을 두세요','12 MP 카메라가 기준 이미지와 비교 중']],
+   done:'완료 ✓', doneL1:sn=>'SN '+sn+' 기록 저장 완료', doneL2:'MES/SPC 전송 · 제품을 꺼내세요'
+  },
+  panel:{station:'PAS · 스테이션 01', waiting:'작업지시 대기', loaded:'SOP v3.2 로드 완료 · 7단계', scan:'공정 작업표의 2D 코드를 스캔하세요', b3wrong:'B3 ✕ 오류',
+   wrong:'잘못된 빈! B2 빈에서 브래킷 BR-02를 집으세요', picked:'올바르게 피킹 · 조립 단계로', pick:'브래킷 BR-02 1개 피킹 · B2 빈',
+   place:'단계 4/7 · 제품 위 빛 윤곽선 안에 브래킷 장착', screw:n=>`단계 5/7 · 나사 체결 1→2→3→4 · ${n}/4 OK`,
+   passed:'AI 검사: 합격 98.7%', inspect:'단계 6/7 · AI 검사 중, 촬영 영역 밖으로 손을 두세요', done:'완료 · 기록을 MES/SPC로 전송함'},
+  hmi:{header:'PROJECTION ASSEMBLY SYSTEM · 스테이션 01', waiting:'작업지시 스캔 대기…', part:'BR-02 · 수량 1 · B2 빈', sop:n=>'SOP v3.2 · 단계 '+n+'/7',
+   torque:'체결 토크 (N·m) · 목표 0.50 ±0.05', screw:n=>'나사 '+n, wait:'대기', aiPass:'AI: 합격 98.7%', aiWait:'AI: 대기', output:'교대 생산량: ', blocked:'차단된 오류: '},
+  live:{cam2:'CAM-2 · 12 MP · 포카요케 검사', cam1:'CAM-1 · 5 MP · AI 손 추적 · 30 FPS', screw:'나사 0.99', orient:'BR-02 방향 정상 0.99',
+   match:'일치율 98.7% ≥ 95% · 합격', wrong:'잘못된 빈: 손이 B3 영역, 요구 B2 → 단계 잠금', confirm:'확인: 왼손이 B2 영역 · conf 0.97'},
+  log:{kind:{info:'INFO',ok:'OK',err:'오류',data:'MES'},
+   e0:'WO-261026-0153 스캔 → MES 회신: BOM, SOP v3.2, 토크 0.50 N·m', e1:'안내 투영 → B2 빈 · 브래킷 BR-02 × 1',
+   e2ok:'CAM-1: 왼손이 B2 영역 (0.97) → 확인', e2err:'CAM-1: 손이 B3 빈, 잘못된 부품 → 적색등 + 부저, 단계 잠금', e2unlock:'손이 올바른 B2 빈 진입 → 단계 잠금 해제',
+   e3:'지그 S1 ON · 브래킷 정위치', e4:(k,tq)=>`나사 ${k}/4 · ${tq} N·m · OK`, e5:'CAM-2: 일치율 98.7% ≥ 95% → 합격',
+   e6a:sn=>`SN ${sn} 기록 저장 · 7단계, 토크 4건, 이미지 2장`, e6b:'MES/SPC 전송 · 체결 토크 차트 갱신',
+   step:(n,name)=>`단계 ${n}/7 · ${name}`, errOn:'오류 시뮬레이션 켬: 작업자가 3단계에서 B3 빈을 잘못 집습니다', errOff:'오류 시뮬레이션 끔', shift:'교대 시작 · 작업자 NV-0217 로그인'}
+ }
+};
+function pickLang(){
+  try{ const q=(new URLSearchParams(location.search).get('lang')||'').toLowerCase(); if(L10N[q]) return q;
+       const s=localStorage.getItem('pas.lang'); if(s&&L10N[s]) return s; }catch(e){}
+  return (navigator.language||'').toLowerCase().startsWith('ko')?'ko':'vi';
+}
+let LANG=pickLang(), T=L10N[LANG];
+let STEPS=STEP_NUM.map((n,k)=>Object.assign({},n,T.steps[k])), HW=T.hw, SW=T.sw;
+const fmtTq=v=>v.toFixed(2).replace('.',T.dec);
+function applyStatic(){
+  document.documentElement.lang=LANG; document.title=T.title;
+  document.querySelectorAll('[data-t]').forEach(el=>{ if(T.ui[el.dataset.t]!=null) el.textContent=T.ui[el.dataset.t]; });
+  document.querySelectorAll('[data-t-aria]').forEach(el=>{ if(T.ui[el.dataset.tAria]!=null) el.setAttribute('aria-label',T.ui[el.dataset.tAria]); });
+  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===LANG)));
+}
+applyStatic();
+document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.lang!==LANG) setLang(b.dataset.lang); }));
+
+if(!window.THREE){ document.getElementById('viewport').insertAdjacentHTML('beforeend','<p style="position:absolute;inset:auto 16px 50% 16px;text-align:center"></p>'); document.getElementById('viewport').lastElementChild.textContent=T.ui.noThree; return; }
 
 /* ---------------- data ---------------- */
-const STEPS=[
- {name:'Quét lệnh & tải SOP',dur:5,real:6,actors:['H5 đầu đọc 2D','H4 IPC/HMI','S3 MES'],
-  desc:'Công nhân quét mã 2D trên phiếu công đoạn. IPC hỏi MES và nhận về BOM, SOP đúng phiên bản và tham số lực siết của model.',
-  roles:[['Đầu đọc 2D','Đọc mã lệnh WO-261026-0153 trên phiếu công đoạn.'],['MES','Trả về model HX-BR200, BOM, SOP v3.2, lực siết 0,50 N·m ±10%.'],['HMI','Hiển thị model, serial, danh sách 7 bước.'],['Đèn tháp','Vàng (chờ lệnh) chuyển sang xanh (đang chạy).']]},
- {name:'Chiếu chỉ dẫn lấy linh kiện',dur:3.5,real:4,actors:['H1 máy chiếu','S1 Step Engine','H2 camera'],
-  desc:'Máy chiếu rọi khung sáng vào đúng ô linh kiện, vẽ mũi tên trên tấm chiếu và ghi nội dung bước ngay trên mặt bàn.',
-  roles:[['Máy chiếu','Rọi sáng ô B2, mũi tên trên tấm chiếu, nội dung bước trên bàn.'],['Camera AI','Bật vùng nhận dạng (pick zone) của ô B2.'],['HMI','Ảnh linh kiện khung đỡ BR-02, số lượng 1.']]},
- {name:'AI xác nhận thao tác tay',dur:4.5,durErr:8,real:5,actors:['H2 camera','S2 AI Vision','H6 PLC/đèn tháp'],
-  desc:'Camera AI theo dõi bàn tay. Tay đi vào đúng vùng lấy thì bước được xác nhận tự động, không cần bấm nút.',
-  descErr:'Tay đi vào ô B3 (sai linh kiện). PLC bật đèn đỏ và còi, Step Engine khóa bước. Khi tay rút ra và vào đúng ô B2, hệ thống tự mở khóa.',
-  roles:[['Camera AI','Nhận diện bàn tay 30 khung hình/giây, kiểm tra tay nằm trong vùng B2.'],['Step Engine','Xác nhận bước, chuyển sang bước lắp.'],['Dữ liệu','Ghi thời điểm lấy linh kiện.']],
-  rolesErr:[['Camera AI','Phát hiện tay trong vùng B3, không phải B2.'],['PLC/đèn tháp','Đèn đỏ nhấp nháy, còi kêu, khóa bước.'],['Máy chiếu','Ô B3 đỏ, ô B2 xanh, chữ cảnh báo trên bàn.'],['Dữ liệu','Lưu sự kiện “lỗi đã chặn” kèm ảnh để phân tích.']]},
- {name:'Lắp vào đồ gá theo hình chiếu',dur:4.5,real:12,actors:['H1 máy chiếu','H7 đồ gá','S1 Step Engine'],
-  desc:'Đường viền vị trí và mũi tên hướng lắp được chiếu thẳng lên sản phẩm. Cảm biến trên đồ gá xác nhận chi tiết đã nằm đúng chỗ.',
-  roles:[['Máy chiếu','Viền nét đứt đúng vị trí đặt khung đỡ và mũi tên hướng lắp.'],['Đồ gá','Cảm biến hiện diện S1 chuyển ON.'],['HMI','Video thao tác mẫu của công nhân lành nghề.']]},
- {name:'Siết vít kiểm soát lực',dur:8,real:24,actors:['H5 súng vặn vít','H6 PLC','S2 đếm vít'],
-  desc:'Thứ tự 4 vít được chiếu lên sản phẩm. Súng vặn vít trả tín hiệu OK/NG kèm giá trị lực; đủ 4/4 vít OK mới cho sang bước.',
-  roles:[['Máy chiếu','Vòng tròn đánh số 1→2→3→4 tại từng lỗ vít, vít xong chuyển xanh.'],['Súng vặn vít','Ngắt theo lực, gửi OK/NG và giá trị N·m.'],['PLC','Đếm vít, chặn nếu thiếu vít hoặc NG.'],['Dữ liệu','Lưu lực siết từng vít theo serial.']]},
- {name:'Kiểm tra Poka-Yoke bằng AI',dur:4.5,real:6,actors:['H2 camera 12 MP','H3 đèn dome','S2 AI Vision'],
-  desc:'Camera 12 MP chụp dưới đèn dome, so với ảnh mẫu chuẩn: đủ vít, đúng chi tiết, đúng hướng. Tỷ lệ phù hợp đạt ngưỡng thì ĐẠT.',
-  roles:[['Đèn dome','Bật sáng đều vùng sản phẩm khi chụp.'],['Camera AI','So sánh mẫu chuẩn: 98,7% ≥ ngưỡng 95%.'],['Nếu NG','Đèn đỏ, giữ sản phẩm trên đồ gá, chiếu vị trí lỗi.']]},
- {name:'Lưu hồ sơ & gửi MES/SPC',dur:4,real:3,actors:['H4 IPC','S3 Truy xuất','MES/SPC'],
-  desc:'Hồ sơ theo serial gồm người làm, thời gian từng bước, lực siết từng vít và ảnh kiểm tra được lưu và gửi MES; biểu đồ SPC cập nhật.',
-  roles:[['Truy xuất','Lưu hồ sơ SN, 7 bước, 4 giá trị lực, 2 ảnh.'],['MES/SPC','Nhận kết quả OK, cập nhật Cpk lực siết.'],['Đèn tháp','Xanh, sẵn sàng sản phẩm kế tiếp.']]}
-];
-const HW=[
- {k:'H1',n:'Máy chiếu dẫn hướng (Workguide/SOP)',a:'proj',s:['Laser short-throw WUXGA, ≥ 4.000 ANSI lumen, ~20.000 h','Chiếu lên kệ linh kiện, tấm chiếu và trực tiếp lên sản phẩm','Giá treo chỉnh 6 bậc, khung bù méo hình']},
- {k:'H2',n:'Camera AI nhận diện ×2',a:'cam',s:['CAM-1 5 MP: theo dõi tay toàn vùng thao tác, 30 fps','CAM-2 12 MP: kiểm tra Poka-Yoke và ngoại quan cuối','Ống kính công nghiệp méo thấp, cáp khóa vít']},
- {k:'H3',n:'Đèn chiếu sáng phụ',a:'led',s:['2 đèn LED bar 600 mm chiếu đều bàn và kệ','Đèn dome/vòng cho vùng kiểm tra cuối','Bộ điều khiển đèn có trigger từ IPC']},
- {k:'H4',n:'Máy tính IPC & màn hình HMI',a:'hmi',s:['IPC Core i7, 32 GB, GPU NVIDIA RTX 8 GB cho AI','HMI cảm ứng 21,5" + màn hình 2 cho video/live camera','UPS online 1,5 kVA']},
- {k:'H5',n:'Ngoại vi & Poka-Yoke',a:'peri',s:['Đầu đọc mã 2D công nghiệp có chân đế','2 súng vặn vít điện kiểm soát lực, tín hiệu OK/NG + bộ đếm vít','Balancer treo súng, cảm biến hiện diện trên đồ gá']},
- {k:'H6',n:'Tủ điện PLC/IO & cảnh báo',a:'plc',s:['PLC mini hoặc Remote I/O Ethernet','Đèn tháp 3 màu có còi, nút dừng khẩn cấp, Start/Reset','Tủ điện 24 VDC, CB, relay an toàn']},
- {k:'H7',n:'Khung bàn thao tác ESD & đồ gá',a:'jig',s:['Nhôm định hình 1800×900×850 mm, khung trên 2200 mm','Thảm ESD nối đất, kệ 3 tầng 18 hộp linh kiện, tấm chiếu trắng','Đồ gá định vị theo model, chốt và cảm biến']}
-];
-const SW=[
- {k:'S1',n:'Module chỉ dẫn người lắp ráp',s:['Soạn SOP không cần lập trình: ảnh tham chiếu → vị trí hiển thị → vùng nhận dạng → trình tự','Chiếu nội dung theo từng bước, video thao tác mẫu','Quản lý phiên bản SOP theo model, đăng nhập công nhân, giao diện Việt/Anh/Hàn']},
- {k:'S2',n:'Hiệu chuẩn máy chiếu & AI Vision',s:['Hiệu chuẩn camera–máy chiếu tự động bằng mẫu chiếu, bù méo','Nhận diện bàn tay và vùng lấy, đếm vít, kiểm tra đủ/đúng/hướng','So sánh mẫu chuẩn, ngưỡng chỉnh theo sản phẩm, chạy GPU tại trạm']},
- {k:'S3',n:'Truy xuất nguồn gốc & kết nối MES/SPC',s:['Hồ sơ theo serial: người làm, thời gian từng bước, lực siết, ảnh','Dashboard thời gian thực, báo cáo năng suất và lỗi','Kết nối MES của HFS (REST/SQL/OPC UA), biểu đồ SPC, Cp/Cpk']}
-];
 const TORQUE=[0.52,0.51,0.53,0.52];
 
 /* ---------------- renderer ---------------- */
 const host=document.getElementById('viewport');
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const tok=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const FD='"Barlow Condensed","Arial Narrow",sans-serif', FB='"Be Vietnam Pro",system-ui,sans-serif', FM='"JetBrains Mono",ui-monospace,monospace';
+const FD='"Barlow Condensed","Noto Sans KR","Arial Narrow",sans-serif', FB='"Be Vietnam Pro","Noto Sans KR",system-ui,sans-serif', FM='"JetBrains Mono",ui-monospace,monospace';
 const V3=THREE.Vector3;
 
 let renderer;
 try{
   renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
-}catch(e){ host.insertAdjacentHTML('beforeend','<p style="position:absolute;inset:auto 16px 50% 16px;text-align:center">Trình duyệt này không bật được WebGL nên không hiển thị mô hình 3D.</p>'); return; }
+}catch(e){ host.insertAdjacentHTML('beforeend','<p style="position:absolute;inset:auto 16px 50% 16px;text-align:center"></p>'); host.lastElementChild.textContent=T.ui.noWebgl; return; }
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
 renderer.outputEncoding=THREE.sRGBEncoding;
 renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
 renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 host.insertBefore(renderer.domElement,host.firstChild);
-renderer.domElement.setAttribute('aria-label','Mô hình 3D trạm PAS');
+renderer.domElement.setAttribute('aria-label',T.ui.ariaModel);
 renderer.domElement.tabIndex=0;
 
 const scene=new THREE.Scene();
@@ -565,9 +743,10 @@ const beam=new THREE.Mesh(beamGeo,new THREE.MeshBasicMaterial({color:0xff3b30,tr
 box(0.07,0.055,0.07,M.yellow,0.84,TOPY+0.028,0.39); const es=cyl(0.026,0.022,M.red,0.84,TOPY+0.066,0.39);
 
 const QR=new V3(-0.80,TOPY+0.002,0.19);
-(function paper(){
-  const C=mkCanvas(400,560),c=C.ctx; c.fillStyle='#fff';c.fillRect(0,0,400,560);
-  c.fillStyle='#0f1a26'; c.font=`700 30px ${FD}`; c.fillText('PHIẾU CÔNG ĐOẠN',24,44);
+const paperC=mkCanvas(400,560);
+function drawPaper(){
+  const c=paperC.ctx; c.fillStyle='#fff';c.fillRect(0,0,400,560);
+  c.fillStyle='#0f1a26'; c.font=`700 30px ${FD}`; c.fillText(T.ui.paper,24,44);
   c.font=`500 18px ${FM}`; c.fillText('WO-261026-0153',24,76); c.fillText('HX-BR200 · SOP v3.2',24,102);
   const q=150,ox=24,oy=128,n=21,s=q/n; seed=11;
   for(let i=0;i<n;i++)for(let j=0;j<n;j++){ if(rnd()>.52){c.fillRect(ox+i*s,oy+j*s,s,s);} }
@@ -575,8 +754,11 @@ const QR=new V3(-0.80,TOPY+0.002,0.19);
   c.fillStyle='#fff'; c.fillRect(ox,oy,8*s,8*s); c.fillRect(ox+q-8*s,oy,8*s,8*s); c.fillRect(ox,oy+q-8*s,8*s,8*s);
   finder(ox,oy); finder(ox+q-7*s,oy); finder(ox,oy+q-7*s);
   c.fillStyle='#8a96a3'; for(let k=0;k<9;k++){c.fillRect(24,320+k*24,330-(k%3)*60,8);}
-  C.tex.needsUpdate=true;
-  const m=new THREE.Mesh(new THREE.PlaneGeometry(0.20,0.28),new THREE.MeshStandardMaterial({map:C.tex,roughness:.9}));
+  paperC.tex.needsUpdate=true;
+}
+drawPaper();
+(function paper(){
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(0.20,0.28),new THREE.MeshStandardMaterial({map:paperC.tex,roughness:.9}));
   m.rotation.set(-Math.PI/2,0,0.06); m.position.set(-0.785,TOPY+0.001,0.25); m.receiveShadow=true; scene.add(m);
 })();
 
@@ -755,16 +937,16 @@ function wrapText(c,txt,x,y,maxW,lh){const words=txt.split(' ');let line='';for(
 function arrow(c,x1,y1,x2,y2,w,col){const a=Math.atan2(y2-y1,x2-x1);c.strokeStyle=col;c.fillStyle=col;c.lineWidth=w;c.lineCap='round';c.beginPath();c.moveTo(x1,y1);c.lineTo(x2-Math.cos(a)*w*2,y2-Math.sin(a)*w*2);c.stroke();c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-Math.cos(a-0.5)*w*4,y2-Math.sin(a-0.5)*w*4);c.lineTo(x2-Math.cos(a+0.5)*w*4,y2-Math.sin(a+0.5)*w*4);c.closePath();c.fill();}
 
 function tableContent(st){
-  const i=st.i;
-  if(i===0) return st.woLoaded?{tone:'ok',head:'ĐÃ TẢI SOP v3.2',lines:['Model HX-BR200 · Lệnh WO-261026-0153','7 bước · Lực siết 0,50 N·m ±10%'],n:1}
-                             :{tone:'w',head:'QUÉT MÃ LỆNH SẢN XUẤT',lines:['Đưa mã 2D trên phiếu công đoạn vào vùng quét'],n:1,arrowLeft:true};
-  if(i===1) return {tone:'w',head:'BƯỚC 2/7 · LẤY LINH KIỆN',lines:['1 × Khung đỡ BR-02','tại ô B2 (đang sáng)'],n:2,arrowUp:true};
-  if(i===2){ if(st.error) return {tone:'err',head:'SAI Ô LINH KIỆN!',lines:['Rút tay khỏi ô B3','Lấy khung đỡ tại ô B2'],n:3};
-             return {tone:st.bin.B2==='ok'?'ok':'w',head:st.bin.B2==='ok'?'ĐÃ LẤY ĐÚNG ✓':'BƯỚC 3/7 · LẤY ĐÚNG Ô',lines:['Camera AI đang xác nhận thao tác tay','Ô B2 · Khung đỡ BR-02'],n:3}; }
-  if(i===3) return st.partPlaced?{tone:'ok',head:'ĐÚNG VỊ TRÍ ✓',lines:['Cảm biến đồ gá S1: ON','Chuẩn bị siết vít'],n:4}:{tone:'w',head:'BƯỚC 4/7 · LẮP KHUNG ĐỠ',lines:['Đặt BR-02 vào viền sáng trên sản phẩm','Mép gấp hướng sang hai bên'],n:4,arrowRight:true};
-  if(i===4) return {tone:st.screwsDone===4?'ok':'w',head:'BƯỚC 5/7 · SIẾT 4 VÍT M3',lines:['Theo thứ tự 1 → 2 → 3 → 4 · 0,50 N·m',`Đã siết ${st.screwsDone}/4 vít OK`],n:5,arrowRight:true};
-  if(i===5) return st.inspected?{tone:'ok',head:'AI: ĐẠT 98,7%',lines:['Đủ 4 vít · đúng chi tiết · đúng hướng','Ngưỡng ≥ 95%'],n:6}:{tone:'w',head:'BƯỚC 6/7 · AI KIỂM TRA',lines:['Giữ tay ngoài vùng chụp','Camera 12 MP đang so mẫu chuẩn'],n:6};
-  return {tone:'ok',head:'HOÀN THÀNH ✓',lines:['Đã lưu hồ sơ SN '+serial(),'Gửi MES/SPC · lấy sản phẩm ra'],n:7};
+  const i=st.i,X=T.table;
+  if(i===0) return st.woLoaded?{tone:'ok',head:X.loaded[0],lines:X.loaded[1],n:1}
+                             :{tone:'w',head:X.scan[0],lines:X.scan[1],n:1,arrowLeft:true};
+  if(i===1) return {tone:'w',head:X.pick[0],lines:X.pick[1],n:2,arrowUp:true};
+  if(i===2){ if(st.error) return {tone:'err',head:X.wrong[0],lines:X.wrong[1],n:3};
+             return {tone:st.bin.B2==='ok'?'ok':'w',head:st.bin.B2==='ok'?X.pickedOk:X.pickRight,lines:X.pickLines,n:3}; }
+  if(i===3) return st.partPlaced?{tone:'ok',head:X.placed[0],lines:X.placed[1],n:4}:{tone:'w',head:X.place[0],lines:X.place[1],n:4,arrowRight:true};
+  if(i===4) return {tone:st.screwsDone===4?'ok':'w',head:X.screw,lines:[X.screwL1,X.screwL2(st.screwsDone)],n:5,arrowRight:true};
+  if(i===5) return st.inspected?{tone:'ok',head:X.passed[0],lines:X.passed[1],n:6}:{tone:'w',head:X.inspect[0],lines:X.inspect[1],n:6};
+  return {tone:'ok',head:X.done,lines:[X.doneL1(serial()),X.doneL2],n:7};
 }
 function drawTable(st){
   const T=texTable,c=T.ctx,ct=tableContent(st); const pulse=st.error?(Math.floor(performance.now()/250)%2):0;
@@ -819,21 +1001,22 @@ function drawPanel(st){
   const BL='#0a5bb0',GR='#0c9a50',RD='#d3271d',INK='#13202d';
   c.fillStyle='rgba(10,91,176,.08)';c.fillRect(0,0,T.w,T.h);
   c.fillStyle=BL;c.fillRect(0,0,T.w,10);
-  c.font=`700 34px ${FD}`;c.fillStyle=BL;c.fillText('PAS · TRẠM 01',24,58);
-  c.font=`600 22px ${FM}`;c.fillStyle=INK;c.fillText(st.woLoaded?'WO-261026-0153 · HX-BR200 · SN '+serial():'Chờ lệnh sản xuất',24,92);
+  const X=L10N[LANG].panel;
+  c.font=`700 34px ${FD}`;c.fillStyle=BL;c.fillText(X.station,24,58);
+  c.font=`600 22px ${FM}`;c.fillStyle=INK;c.fillText(st.woLoaded?'WO-261026-0153 · HX-BR200 · SN '+serial():X.waiting,24,92);
   let msg='',col=INK;
-  if(i===0) msg=st.woLoaded?'Đã tải SOP v3.2 · 7 bước':'Quét mã 2D trên phiếu công đoạn';
+  if(i===0) msg=st.woLoaded?X.loaded:X.scan;
   if(i===1||i===2){
     const tx=binPx('B2'); const okB2=st.bin.B2==='ok';
     c.fillStyle=okB2?GR:GR; arrow(c,tx,110,tx,228,16,okB2?GR:GR);
     c.font=`700 40px ${FD}`;c.fillStyle=GR;c.fillText(okB2?'B2 ✓':'B2',tx+34,200);
-    if(st.error){ const ex=binPx('B3'); arrow(c,ex,110,ex,228,16,ph?RD:'#ff8a80'); c.fillStyle=RD;c.font=`700 40px ${FD}`;c.fillText('B3 ✕ SAI',ex+34,200); }
-    msg=st.error?'SAI Ô! Lấy khung đỡ BR-02 tại ô B2':(okB2?'Đã lấy đúng · chuyển sang lắp':'LẤY 1 × KHUNG ĐỠ BR-02 · Ô B2'); col=st.error?RD:GR;
+    if(st.error){ const ex=binPx('B3'); arrow(c,ex,110,ex,228,16,ph?RD:'#ff8a80'); c.fillStyle=RD;c.font=`700 40px ${FD}`;c.fillText(X.b3wrong,ex+34,200); }
+    msg=st.error?X.wrong:(okB2?X.picked:X.pick); col=st.error?RD:GR;
   }
-  if(i===3) {msg='Bước 4/7 · Đặt khung đỡ vào viền sáng trên sản phẩm';col=BL;}
-  if(i===4) {msg=`Bước 5/7 · Siết vít 1→2→3→4 · ${st.screwsDone}/4 OK`;col=BL;}
-  if(i===5) {msg=st.inspected?'AI kiểm tra: ĐẠT 98,7%':'Bước 6/7 · AI đang kiểm tra, giữ tay ngoài vùng chụp';col=st.inspected?GR:BL;}
-  if(i===6) {msg='HOÀN THÀNH · Hồ sơ đã gửi MES/SPC';col=GR;}
+  if(i===3) {msg=X.place;col=BL;}
+  if(i===4) {msg=X.screw(st.screwsDone);col=BL;}
+  if(i===5) {msg=st.inspected?X.passed:X.inspect;col=st.inspected?GR:BL;}
+  if(i===6) {msg=X.done;col=GR;}
   c.font=`700 46px ${FD}`;c.fillStyle=col; c.textAlign='right'; c.fillText(msg,T.w-28,72); c.textAlign='left';
   T.tex.needsUpdate=true;
 }
@@ -843,10 +1026,11 @@ function drawHMI(st){
   const sig=[i,st.woLoaded,st.error,st.bin.B2,st.partPlaced,st.screwsDone,st.inspected,sim.cycles,clk].join('|'); if(sig===T.sig) return; T.sig=sig;
   const W=T.w,H=T.h; c.fillStyle='#0d1824';c.fillRect(0,0,W,H);
   c.fillStyle=st.error?'#b3261e':'#0a5bb0';c.fillRect(0,0,W,64);
-  c.fillStyle='#fff';c.font=`700 40px ${FD}`;c.fillText('PAS',22,46);c.font=`600 25px ${FD}`;c.fillText('PROJECTION ASSEMBLY SYSTEM · TRẠM 01',96,44);
+  const X=L10N[LANG].hmi;
+  c.fillStyle='#fff';c.font=`700 40px ${FD}`;c.fillText('PAS',22,46);c.font=`600 25px ${FD}`;c.fillText(X.header,96,44);
   c.textAlign='right';c.font=`500 22px ${FM}`;c.fillText(clk,W-22,42);c.textAlign='left';
   c.fillStyle='#16283a';c.fillRect(0,64,W,44);c.fillStyle='#9fb6cc';c.font=`500 19px ${FM}`;
-  c.fillText(st.woLoaded?`WO-261026-0153   HX-BR200   SN ${serial()}   NV-0217`:'Chờ quét lệnh sản xuất…',22,93);
+  c.fillText(st.woLoaded?`WO-261026-0153   HX-BR200   SN ${serial()}   NV-0217`:X.waiting,22,93);
   STEPS.forEach((s,k)=>{const y=128+k*56;const done=k<i||(k===i&&sim.t>0.98);const cur=k===i;
     c.fillStyle=cur?(st.error?'#3a1513':'#123a63'):'#122130';rr(c,16,y,420,48,8);c.fill();
     c.beginPath();c.arc(44,y+24,15,0,Math.PI*2);c.fillStyle=done?'#1fae5b':cur?(st.error?'#e0352b':'#2f8cff'):'#2a3b4d';c.fill();
@@ -857,13 +1041,13 @@ function drawHMI(st){
   c.fillStyle='#c9d6e3';c.font=`500 22px ${FB}`;let y=214;ct.lines.forEach(l=>{y=wrapText(c,l,px+20,y,pw-40,32);});
   // part image tile
   c.fillStyle='#1b2f45';rr(c,px+20,270,140,84,8);c.fill();c.fillStyle='#c58b3c';c.fillRect(px+45,300,90,30);c.fillStyle='#8a5d22';c.fillRect(px+45,296,6,38);c.fillRect(px+129,296,6,38);
-  c.fillStyle='#8aa2ba';c.font=`500 17px ${FM}`;c.fillText('BR-02 · SL 1 · ô B2',px+176,318);c.fillText('SOP v3.2 · bước '+(i+1)+'/7',px+176,344);
+  c.fillStyle='#8aa2ba';c.font=`500 17px ${FM}`;c.fillText(X.part,px+176,318);c.fillText(X.sop(i+1),px+176,344);
   // torque table
-  c.fillStyle='#122130';rr(c,px,384,pw,196,10);c.fill();c.fillStyle='#8aa2ba';c.font=`600 18px ${FB}`;c.fillText('Lực siết (N·m) · mục tiêu 0,50 ±0,05',px+20,416);
-  for(let k=0;k<4;k++){const y=448+k*32;const d=k<st.screwsDone;c.fillStyle='#c9d6e3';c.font=`500 20px ${FM}`;c.fillText('Vít '+(k+1),px+20,y);
-    c.fillText(d?TORQUE[k].toFixed(2).replace('.',','):'—',px+120,y);c.fillStyle=d?'#4be08c':'#4c5f73';c.fillText(d?'OK':'chờ',px+210,y);}
-  c.fillStyle=st.inspected?'#4be08c':'#4c5f73';c.font=`700 30px ${FD}`;c.fillText(st.inspected?'AI: ĐẠT 98,7%':'AI: chờ',px+300,460);
-  c.fillStyle='#8aa2ba';c.font=`500 18px ${FB}`;c.fillText('Sản lượng ca: '+sim.cycles,px+300,500);c.fillText('Lỗi đã chặn: '+sim.blocked,px+300,530);
+  c.fillStyle='#122130';rr(c,px,384,pw,196,10);c.fill();c.fillStyle='#8aa2ba';c.font=`600 18px ${FB}`;c.fillText(X.torque,px+20,416);
+  for(let k=0;k<4;k++){const y=448+k*32;const d=k<st.screwsDone;c.fillStyle='#c9d6e3';c.font=`500 20px ${FM}`;c.fillText(X.screw(k+1),px+20,y);
+    c.fillText(d?fmtTq(TORQUE[k]):'—',px+120,y);c.fillStyle=d?'#4be08c':'#4c5f73';c.fillText(d?'OK':X.wait,px+210,y);}
+  c.fillStyle=st.inspected?'#4be08c':'#4c5f73';c.font=`700 30px ${FD}`;c.fillText(st.inspected?X.aiPass:X.aiWait,px+300,460);
+  c.fillStyle='#8aa2ba';c.font=`500 18px ${FB}`;c.fillText(X.output+sim.cycles,px+300,500);c.fillText(X.blocked+sim.blocked,px+300,530);
   T.tex.needsUpdate=true;
 }
 let liveLast=0;
@@ -872,15 +1056,15 @@ function drawLive(st,now){
   const T=texLive,c=T.ctx,W=T.w,H=T.h; c.fillStyle='#0a1118';c.fillRect(0,0,W,H);
   c.fillStyle='#14212e';c.fillRect(0,0,W,44);c.fillStyle='#e6eef6';c.font=`600 22px ${FD}`;
   const insp=st.i===5;
-  c.fillText(insp?'CAM-2 · 12 MP · KIỂM TRA POKA-YOKE':'CAM-1 · 5 MP · AI THEO DÕI TAY · 30 FPS',16,30);
+  c.fillText(insp?L10N[LANG].live.cam2:L10N[LANG].live.cam1,16,30);
   c.fillStyle='#ff4b3e';c.beginPath();c.arc(W-30,22,7,0,Math.PI*2);c.fill();c.fillStyle='#e6eef6';c.font=`500 16px ${FM}`;c.textAlign='right';c.fillText('LIVE',W-44,28);c.textAlign='left';
   if(insp||st.i===6){
     const cx=W/2,cy=H/2+20; c.fillStyle='#5c6876';c.fillRect(cx-240,cy-160,480,320);c.fillStyle='#c58b3c';c.fillRect(cx-145,cy-105,290,210);
     SCREWS.forEach((p,k)=>{const x=cx+(p.x-JIG.x)*1600,y=cy+(p.z-JIG.z)*1600;c.fillStyle='#22272d';c.beginPath();c.arc(x,y,12,0,Math.PI*2);c.fill();
-      if(st.inspected){c.strokeStyle='#4be08c';c.lineWidth=3;c.strokeRect(x-22,y-22,44,44);c.fillStyle='#4be08c';c.font=`500 14px ${FM}`;c.fillText('vít 0.99',x-22,y-28);}});
+      if(st.inspected){c.strokeStyle='#4be08c';c.lineWidth=3;c.strokeRect(x-22,y-22,44,44);c.fillStyle='#4be08c';c.font=`500 14px ${FM}`;c.fillText(L10N[LANG].live.screw,x-22,y-28);}});
     if(!st.inspected){const yy=cy-160+320*st.scanY;c.fillStyle='rgba(80,200,255,.6)';c.fillRect(cx-240,yy-2,480,4);}
-    else {c.strokeStyle='#4be08c';c.lineWidth=3;c.strokeRect(cx-150,cy-110,300,220);c.fillStyle='#4be08c';c.font=`600 16px ${FM}`;c.fillText('BR-02 đúng hướng 0.99',cx-150,cy-118);
-      c.fillStyle='rgba(10,17,24,.8)';c.fillRect(16,H-58,W-32,44);c.fillStyle='#4be08c';c.font=`700 26px ${FD}`;c.fillText('TỶ LỆ PHÙ HỢP 98,7% ≥ 95% · ĐẠT',30,H-28);}
+    else {c.strokeStyle='#4be08c';c.lineWidth=3;c.strokeRect(cx-150,cy-110,300,220);c.fillStyle='#4be08c';c.font=`600 16px ${FM}`;c.fillText(L10N[LANG].live.orient,cx-150,cy-118);
+      c.fillStyle='rgba(10,17,24,.8)';c.fillRect(16,H-58,W-32,44);c.fillStyle='#4be08c';c.font=`700 26px ${FD}`;c.fillText(L10N[LANG].live.match,30,H-28);}
     T.tex.needsUpdate=true; return;
   }
   // top-down schematic
@@ -901,8 +1085,8 @@ function drawLive(st,now){
     c.fillStyle='rgba(91,140,210,.85)';c.beginPath();c.ellipse(x,y,22,28,0,0,Math.PI*2);c.fill();
     c.strokeStyle=col;c.lineWidth=3;c.strokeRect(x-34,y-40,68,80);c.fillStyle=col;c.font=`600 15px ${FM}`;
     c.fillText(`hand_${k} ${det?st.detect.conf.toFixed(2):'0.95'}`,x-34,y-48);});
-  if(st.error){c.fillStyle='rgba(179,38,30,.9)';c.fillRect(16,H-58,W-32,44);c.fillStyle='#fff';c.font=`700 26px ${FD}`;c.fillText('SAI Ô: tay trong vùng B3, yêu cầu B2 → khóa bước',30,H-28);}
-  else if(st.detect&&st.detect.ok){c.fillStyle='rgba(10,17,24,.85)';c.fillRect(16,H-58,W-32,44);c.fillStyle='#4be08c';c.font=`700 26px ${FD}`;c.fillText('XÁC NHẬN: tay trái trong vùng B2 · conf 0.97',30,H-28);}
+  if(st.error){c.fillStyle='rgba(179,38,30,.9)';c.fillRect(16,H-58,W-32,44);c.fillStyle='#fff';c.font=`700 26px ${FD}`;c.fillText(L10N[LANG].live.wrong,30,H-28);}
+  else if(st.detect&&st.detect.ok){c.fillStyle='rgba(10,17,24,.85)';c.fillRect(16,H-58,W-32,44);c.fillStyle='#4be08c';c.font=`700 26px ${FD}`;c.fillText(L10N[LANG].live.confirm,30,H-28);}
   T.tex.needsUpdate=true;
 }
 
@@ -936,7 +1120,7 @@ function applyState(now){
   const on={r:st.tower==='r'&&blink,a:st.tower==='a'&&blink,g:st.tower==='g'};
   for(const k of ['r','a','g']){ const s=towerSeg[k]; s.mat.emissiveIntensity=on[k]?2.2:0; s.glow.visible=on[k]; }
   document.getElementById('tR').classList.toggle('on',on.r); document.getElementById('tA').classList.toggle('on',on.a); document.getElementById('tG').classList.toggle('on',on.g);
-  const tt=st.tower==='r'?'Lỗi · khóa bước':st.tower==='a'?'Chờ lệnh':'Đang chạy'; const tEl=document.getElementById('tText'); if(tEl.textContent!==tt) tEl.textContent=tt;
+  const tt=T.ui.tower[st.tower]||T.ui.tower.g; const tEl=document.getElementById('tText'); if(tEl.textContent!==tt) tEl.textContent=tt;
   // inspection lighting
   const insp=st.i===5; ringMat.emissiveIntensity=insp?2.4:0.15; inspLight.intensity=insp?2.2:0; cam2Fr.visible=insp;
   // frustums
@@ -950,15 +1134,19 @@ function applyState(now){
 
 /* ---------------- UI ---------------- */
 const $=id=>document.getElementById(id);
-const stepsEl=$('steps'), tl=$('timeline');
-STEPS.forEach((s,k)=>{
-  const li=document.createElement('li'); li.innerHTML=`<button type="button" class="step" data-k="${k}"><span class="n">${k+1}</span><span class="t">${s.name}</span><span class="s">~${s.real} s</span></button>`; stepsEl.appendChild(li);
-  const b=document.createElement('button'); b.type='button'; b.className='seg'; b.dataset.k=k; b.setAttribute('aria-label',`Bước ${k+1}: ${s.name}`); b.innerHTML=`<i class="fill"></i><span>${k+1}</span>`; tl.appendChild(b);
-});
+const stepsEl=$('steps'), tl=$('timeline'), hwList=$('hwList'), swList=$('swList');
+function buildLists(){
+  stepsEl.innerHTML=''; tl.innerHTML=''; hwList.innerHTML=''; swList.innerHTML='';
+  STEPS.forEach((s,k)=>{
+    const li=document.createElement('li'); li.innerHTML=`<button type="button" class="step" data-k="${k}"><span class="n">${k+1}</span><span class="t">${s.name}</span><span class="s">~${s.real} s</span></button>`; stepsEl.appendChild(li);
+    const b=document.createElement('button'); b.type='button'; b.className='seg'; b.dataset.k=k; b.setAttribute('aria-label',T.ui.stepAria(k+1,s.name)); b.innerHTML=`<i class="fill"></i><span>${k+1}</span>`; tl.appendChild(b);
+  });
+  HW.forEach(h=>{const li=document.createElement('li');li.innerHTML=`<button type="button" class="hw-item" data-a="${h.a}"><span class="code">${h.k}</span><span><b>${h.n}</b><ul>${h.s.map(x=>`<li>${x}</li>`).join('')}</ul></span></button>`;hwList.appendChild(li);});
+  SW.forEach(h=>{const li=document.createElement('li');li.innerHTML=`<div class="hw-item" style="cursor:default"><span class="code">${h.k}</span><span><b>${h.n}</b><ul>${h.s.map(x=>`<li>${x}</li>`).join('')}</ul></span></div>`;swList.appendChild(li);});
+}
+buildLists();
 stepsEl.addEventListener('click',e=>{const b=e.target.closest('.step');if(b) jump(+b.dataset.k);});
 tl.addEventListener('click',e=>{const b=e.target.closest('.seg');if(b) jump(+b.dataset.k);});
-const hwList=$('hwList'); HW.forEach(h=>{const li=document.createElement('li');li.innerHTML=`<button type="button" class="hw-item" data-a="${h.a}"><span class="code">${h.k}</span><span><b>${h.n}</b><ul>${h.s.map(x=>`<li>${x}</li>`).join('')}</ul></span></button>`;hwList.appendChild(li);});
-const swList=$('swList'); SW.forEach(h=>{const li=document.createElement('li');li.innerHTML=`<div class="hw-item" style="cursor:default"><span class="code">${h.k}</span><span><b>${h.n}</b><ul>${h.s.map(x=>`<li>${x}</li>`).join('')}</ul></span></div>`;swList.appendChild(li);});
 hwList.addEventListener('click',e=>{const b=e.target.closest('.hw-item');if(b) focusAnchor(b.dataset.a);});
 
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
@@ -968,17 +1156,17 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
 
 // labels
 const ANCHORS={
-  proj:{k:'H1',n:'Máy chiếu dẫn hướng',p:new V3(0,2.19,0.03),view:[[1.2,2.5,1.5],[0,1.7,-0.05]]},
-  cam:{k:'H2',n:'Camera AI ×2',p:new V3(-0.30,2.16,0.14),view:[[-1.0,2.3,1.6],[-0.05,1.6,0.1]]},
-  led:{k:'H3',n:'Đèn LED bar / dome',p:new V3(-0.63,2.16,0.14),view:[[-1.4,2.4,1.4],[-0.2,1.9,0.0]]},
-  hmi:{k:'H4',n:'IPC & HMI',p:new V3(0,2.06,-0.39),view:[[0.6,1.85,1.5],[0,1.65,-0.35]]},
-  peri:{k:'H5',n:'Đầu đọc 2D & súng vặn vít',p:new V3(0.77,1.56,0.205),view:[[1.6,1.7,1.4],[0.45,1.2,0.1]]},
-  plc:{k:'H6',n:'PLC/IO & đèn tháp',p:new V3(0.97,1.86,-0.43),view:[[1.9,1.4,1.5],[0.6,1.0,-0.1]]},
-  jig:{k:'H7',n:'Bàn ESD & đồ gá',p:new V3(0.18,PY+0.03,0.30),view:[[0.75,1.45,0.95],[0.15,0.92,0.12]]},
-  mes:{k:'MES',n:'Server MES/SPC (HFS)',p:new V3(-1.72,1.20,-0.10),view:[[-0.3,1.5,2.3],[-1.15,0.75,-0.15]],server:true}
+  proj:{k:'H1',p:new V3(0,2.19,0.03),view:[[1.2,2.5,1.5],[0,1.7,-0.05]]},
+  cam:{k:'H2',p:new V3(-0.30,2.16,0.14),view:[[-1.0,2.3,1.6],[-0.05,1.6,0.1]]},
+  led:{k:'H3',p:new V3(-0.63,2.16,0.14),view:[[-1.4,2.4,1.4],[-0.2,1.9,0.0]]},
+  hmi:{k:'H4',p:new V3(0,2.06,-0.39),view:[[0.6,1.85,1.5],[0,1.65,-0.35]]},
+  peri:{k:'H5',p:new V3(0.77,1.56,0.205),view:[[1.6,1.7,1.4],[0.45,1.2,0.1]]},
+  plc:{k:'H6',p:new V3(0.97,1.86,-0.43),view:[[1.9,1.4,1.5],[0.6,1.0,-0.1]]},
+  jig:{k:'H7',p:new V3(0.18,PY+0.03,0.30),view:[[0.75,1.45,0.95],[0.15,0.92,0.12]]},
+  mes:{k:'MES',p:new V3(-1.72,1.20,-0.10),view:[[-0.3,1.5,2.3],[-1.15,0.75,-0.15]],server:true}
 };
 const labelsEl=$('labels'); const labels=[];
-for(const key in ANCHORS){const a=ANCHORS[key];const el=document.createElement('button');el.type='button';el.className='lbl'+(a.server?' server':'');el.innerHTML=`<span class="dot"></span><span class="tag"><em>${a.k}</em>${a.n}</span>`;el.addEventListener('click',()=>focusAnchor(key));labelsEl.appendChild(el);labels.push({el,a,key,tag:el.querySelector('.tag'),w:0});}
+for(const key in ANCHORS){const a=ANCHORS[key];const el=document.createElement('button');el.type='button';el.className='lbl'+(a.server?' server':'');el.innerHTML=`<span class="dot"></span><span class="tag"><em>${a.k}</em><span class="nm"></span></span>`;el.querySelector('.nm').textContent=T.anchors[key];el.addEventListener('click',()=>focusAnchor(key));labelsEl.appendChild(el);labels.push({el,a,key,tag:el.querySelector('.tag'),nm:el.querySelector('.nm'),w:0});}
 function focusAnchor(key){const a=ANCHORS[key];flyTo(a.view[0],a.view[1]);labels.forEach(L=>L.el.classList.toggle('sel',L.key===key));document.querySelectorAll('.hw-item[data-a]').forEach(b=>b.classList.toggle('sel',b.dataset.a===key));setViewBtn(null);}
 const VIEWS={overview:[[2.2,2.35,3.05],[-0.25,1.08,0]],operator:[[-0.02,1.98,1.12],[0,1.0,-0.12]],top:[[0.01,3.7,0.55],[0,0.9,-0.02]],jig:[[0.62,1.38,0.82],[0.15,0.93,0.14]],cabinet:[[1.85,0.85,1.65],[0.45,0.5,0]]};
 function setViewBtn(v){document.querySelectorAll('.views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===v)));}
@@ -987,32 +1175,48 @@ let tween=null;
 function flyTo(p,t,ms){tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:new V3(...p),t1:new V3(...t),start:performance.now(),ms:reduceMotion?1:(ms||900)};}
 
 // toggles
-$('tgErr').addEventListener('change',e=>{sim.err=e.target.checked; if(sim.step===2) {sim.t=0;} renderDetail(); logLine(sim.err?'Bật mô phỏng lỗi: công nhân sẽ lấy sai ô B3 ở bước 3':'Tắt mô phỏng lỗi','info');});
+$('tgErr').addEventListener('change',e=>{sim.err=e.target.checked; if(sim.step===2) {sim.t=0;} renderDetail(); logLine(sim.err?T.log.errOn:T.log.errOff,'info');});
 $('tgLabels').addEventListener('change',()=>{});
 $('tgOp').addEventListener('change',e=>{const v=e.target.checked;op.root.visible=v;for(const k of ['L','R']){const a=arms[k];a.up.visible=a.fo.visible=a.el.visible=a.sh.visible=v;}});
 $('speed').addEventListener('change',e=>{sim.speed=+e.target.value;});
 $('play').addEventListener('click',()=>{sim.playing=!sim.playing;syncPlay();});
 $('prev').addEventListener('click',()=>jump((sim.step+6)%7));
 $('next').addEventListener('click',()=>jump((sim.step+1)%7));
-function syncPlay(){$('playIco').textContent=sim.playing?'❚❚':'▶';$('playTxt').textContent=sim.playing?'Tạm dừng':'Chạy mô phỏng';}
+function syncPlay(){$('playIco').textContent=sim.playing?'❚❚':'▶';$('playTxt').textContent=sim.playing?T.ui.pause:T.ui.play;}
 
 // log
-const logEl=$('log'); const KIND={info:'INFO',ok:'OK',err:'LỖI',data:'MES'};
-function logLine(msg,kind,clockSec){const li=document.createElement('li');li.innerHTML=`<time>${fmtClock(clockSec==null?sim.clock+STEPS[sim.step].real*sim.t:clockSec)}</time><span class="k ${kind}">${KIND[kind]||'INFO'}</span><span class="msg"></span>`;li.querySelector('.msg').textContent=msg;logEl.prepend(li);while(logEl.children.length>60) logEl.lastChild.remove();}
+const logEl=$('log');
+function logLine(msg,kind,clockSec){const li=document.createElement('li');li.innerHTML=`<time>${fmtClock(clockSec==null?sim.clock+STEPS[sim.step].real*sim.t:clockSec)}</time><span class="k ${kind}">${T.log.kind[kind]||'INFO'}</span><span class="msg"></span>`;li.querySelector('.msg').textContent=msg;logEl.prepend(li);while(logEl.children.length>60) logEl.lastChild.remove();}
 function eventsFor(i){
-  const e=[];
-  if(i===0) e.push({t:0.62,k:'data',m:'Quét WO-261026-0153 → MES trả BOM, SOP v3.2, lực 0,50 N·m'});
-  if(i===1) e.push({t:0.05,k:'info',m:'Chiếu chỉ dẫn → ô B2 · khung đỡ BR-02 × 1'});
-  if(i===2){ if(!sim.err) e.push({t:0.40,k:'ok',m:'CAM-1: tay trái trong vùng B2 (0.97) → xác nhận'});
-    else { e.push({t:0.25,k:'err',m:'CAM-1: tay trong ô B3, SAI linh kiện → đèn đỏ + còi, khóa bước',fx:()=>{sim.blocked++;}}); e.push({t:0.62,k:'ok',m:'Tay vào đúng ô B2 → mở khóa bước'}); } }
-  if(i===3) e.push({t:0.60,k:'ok',m:'Đồ gá S1 ON · khung đỡ đúng vị trí'});
-  if(i===4) SCREW_WIN.forEach((a,k)=>e.push({t:a+0.15,k:'ok',m:`Vít ${k+1}/4 · ${TORQUE[k].toFixed(2).replace('.',',')} N·m · OK`}));
-  if(i===5) e.push({t:0.62,k:'ok',m:'CAM-2: tỷ lệ phù hợp 98,7% ≥ 95% → ĐẠT'});
-  if(i===6){ e.push({t:0.30,k:'data',m:`Lưu hồ sơ SN ${serial()} · 7 bước, 4 lực siết, 2 ảnh`}); e.push({t:0.80,k:'data',m:'Gửi MES/SPC · cập nhật biểu đồ lực siết'}); }
+  const e=[],X=T.log;
+  if(i===0) e.push({t:0.62,k:'data',m:X.e0});
+  if(i===1) e.push({t:0.05,k:'info',m:X.e1});
+  if(i===2){ if(!sim.err) e.push({t:0.40,k:'ok',m:X.e2ok});
+    else { e.push({t:0.25,k:'err',m:X.e2err,fx:()=>{sim.blocked++;}}); e.push({t:0.62,k:'ok',m:X.e2unlock}); } }
+  if(i===3) e.push({t:0.60,k:'ok',m:X.e3});
+  if(i===4) SCREW_WIN.forEach((a,k)=>e.push({t:a+0.15,k:'ok',m:X.e4(k+1,fmtTq(TORQUE[k]))}));
+  if(i===5) e.push({t:0.62,k:'ok',m:X.e5});
+  if(i===6){ e.push({t:0.30,k:'data',m:X.e6a(serial())}); e.push({t:0.80,k:'data',m:X.e6b}); }
   return e;
 }
 function fire(i,t0,t1){for(const ev of eventsFor(i)) if(ev.t>t0&&ev.t<=t1){ if(ev.fx) ev.fx(); logLine(ev.m,ev.k); }}
-function stepStart(){ logLine(`Bước ${sim.step+1}/7 · ${STEPS[sim.step].name}`,'info'); renderDetail(); }
+function stepStart(){ logLine(T.log.step(sim.step+1,STEPS[sim.step].name),'info'); renderDetail(); }
+function rebootLog(){
+  while(logEl.firstChild) logEl.firstChild.remove();
+  const base=sim.clock-STEPS[0].real; logLine(T.log.shift,'info',base-4);
+  logLine(T.log.step(1,STEPS[0].name),'info',base); logLine(T.log.e0,'data',base+4);
+  logLine(T.log.step(2,STEPS[1].name),'info',sim.clock); logLine(T.log.e1,'info',sim.clock);
+}
+function setLang(l){
+  if(!L10N[l]) return; LANG=l; T=L10N[l];
+  try{localStorage.setItem('pas.lang',l);}catch(e){}
+  STEPS=STEP_NUM.map((n,k)=>Object.assign({},n,T.steps[k])); HW=T.hw; SW=T.sw;
+  applyStatic(); buildLists();
+  labels.forEach(L=>{L.nm.textContent=T.anchors[L.key];L.w=0;});
+  const refresh=()=>{texTable.sig=texProd.sig=texPanel.sig=texHMI.sig='';labels.forEach(L=>{L.w=0;});drawPaper();};
+  refresh(); renderDetail(); syncPlay(); lastUI=''; rebootLog();
+  if(document.fonts&&document.fonts.load) Promise.all([document.fonts.load(`700 40px ${FD}`,T.sample),document.fonts.load(`600 40px ${FB}`,T.sample)]).then(refresh,refresh);
+}
 function jump(k){ if(sim.step===6&&k===0) sim.cycles++; sim.step=k; sim.t=0; stepStart(); }
 function advance(dt){
   const t0=sim.t; sim.t=Math.min(1,sim.t+dt*sim.speed/stepDur(sim.step)); fire(sim.step,t0,sim.t);
@@ -1028,8 +1232,8 @@ function syncUI(st){
   const sig=[sim.step,st.error,Math.round(sim.t*100),sim.cycles,sim.blocked].join('|'); if(sig===lastUI) return; lastUI=sig;
   document.querySelectorAll('.step').forEach((b,k)=>{b.classList.toggle('cur',k===sim.step);b.classList.toggle('done',k<sim.step);b.classList.toggle('errs',k===sim.step&&st.error);});
   tl.querySelectorAll('.seg').forEach((b,k)=>{b.classList.toggle('cur',k===sim.step);b.classList.toggle('errs',k===sim.step&&st.error);b.firstChild.style.width=(k<sim.step?100:k===sim.step?sim.t*100:0)+'%';});
-  $('chipNo').textContent=`BƯỚC ${sim.step+1}/7`; $('chipName').textContent=st.error?'Lấy sai ô B3 · đã khóa bước':STEPS[sim.step].name; $('chip').classList.toggle('err',st.error);
-  $('kOk').innerHTML=`${sim.cycles}<small>sp</small>`; $('kBlk').textContent=sim.blocked;
+  $('chipNo').textContent=T.ui.chipStep(sim.step+1); $('chipName').textContent=st.error?T.ui.chipErr:STEPS[sim.step].name; $('chip').classList.toggle('err',st.error);
+  $('kOk').innerHTML=`${sim.cycles}<small>${T.ui.unit}</small>`; $('kBlk').textContent=sim.blocked;
 }
 
 /* ---------------- resize, loop ---------------- */
@@ -1064,14 +1268,12 @@ controls.addEventListener('start',()=>{tween=null;setViewBtn(null);});
 // boot: pre-fill log as if the station has run up to step 2
 (function boot(){
   if(host.clientWidth<640) $('tgLabels').checked=false;
-  const base=sim.clock-STEPS[0].real; logLine('Bắt đầu ca · đăng nhập NV-0217','info',base-4);
-  logLine('Bước 1/7 · Quét lệnh & tải SOP','info',base); logLine('Quét WO-261026-0153 → MES trả BOM, SOP v3.2, lực 0,50 N·m','data',base+4);
-  logLine('Bước 2/7 · Chiếu chỉ dẫn lấy linh kiện','info',sim.clock); logLine('Chiếu chỉ dẫn → ô B2 · khung đỡ BR-02 × 1','info',sim.clock);
+  rebootLog();
   renderDetail(); syncPlay();
   let started=false; const go=()=>{if(started)return;started=true;texTable.sig=texProd.sig=texPanel.sig=texHMI.sig='';requestAnimationFrame(loop);}; setTimeout(go,1500);
-  if(document.fonts&&document.fonts.load){ Promise.all([document.fonts.load(`700 40px ${FD}`),document.fonts.load(`600 40px ${FB}`),document.fonts.load(`500 20px ${FM}`)]).then(go,go); setTimeout(()=>{texTable.sig=texProd.sig=texPanel.sig=texHMI.sig='';},2500); } else go();
+  if(document.fonts&&document.fonts.load){ Promise.all([document.fonts.load(`700 40px ${FD}`,T.sample),document.fonts.load(`600 40px ${FB}`,T.sample),document.fonts.load(`500 20px ${FM}`)]).then(go,go); setTimeout(()=>{texTable.sig=texProd.sig=texPanel.sig=texHMI.sig='';drawPaper();labels.forEach(L=>{L.w=0;});},2500); } else go();
 })();
-window.__pas={sim,jump,camera,controls,flyTo,VIEWS};
+window.__pas={sim,jump,camera,controls,flyTo,VIEWS,setLang,getLang:()=>LANG};
 })();
 </script>
 

@@ -6,15 +6,15 @@
       "slug": "tram-pas-hfs-vina",
       "name": "Trạm PAS HFS VINA",
       "project": "HFS VINA",
-      "description": "Mô hình 3D trạm lắp ráp chỉ dẫn bằng máy chiếu (PAS), camera AI theo dõi thao tác tay, súng vặn vít kiểm soát lực và truy xuất dữ liệu về MES/SPC. Kéo để xoay, cuộn để phóng to.",
+      "description": "Mô hình 3D trạm lắp ráp chỉ dẫn bằng máy chiếu (PAS), camera AI theo dõi thao tác tay, súng vặn vít kiểm soát lực và truy xuất dữ liệu về MES/SPC. Giao diện Tiếng Việt / 한국어 (nút chuyển ngôn ngữ, hoặc thêm ?lang=ko vào link).",
       "entry": "index.html",
       "source": "html",
       "status": "published",
-      "version": 1,
+      "version": 2,
       "files": 1,
-      "bytes": 92342,
+      "bytes": 114463,
       "createdAt": "2026-10-27T02:30:00.000Z",
-      "updatedAt": "2026-10-27T02:30:00.000Z",
+      "updatedAt": "2026-10-27T03:45:00.000Z",
       "thumbnail": null
     }
   ]

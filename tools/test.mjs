@@ -269,7 +269,7 @@ console.log('\ngithub.js');
     assert.equal(fake.fileAt(tree, 'concepts/tram-pas-hfs-vina/old.js'), null, 'old file removed');
     const index = JSON.parse(fake.fileAt(tree, 'data/concepts.json').toString('utf8'));
     const cpt = index.concepts.find((x) => x.slug === 'tram-pas-hfs-vina');
-    assert.equal(cpt.version, 2);
+    assert.equal(cpt.version, JSON.parse(baseIndex).concepts[0].version + 1);
     assert.equal(cpt.name, 'Trạm PAS HFS VINA v2');
     assert.equal(cpt.source, 'zip');
     assert.equal(index.concepts.length, 1);
