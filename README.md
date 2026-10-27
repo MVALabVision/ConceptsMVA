@@ -212,7 +212,7 @@ Thêm concept bằng Git (không qua giao diện): chép file vào `concepts/<sl
 |---|---|
 | "Deployment failed" ngay lần đầu | Pages chưa bật → mục 3.1, rồi *Re-run jobs*. |
 | Token bị từ chối (401) | Token sai/hết hạn. Tạo lại. |
-| "does not have write access" | Resource owner không phải MVALabVision, hoặc chưa cấp `Contents: Read and write`, hoặc tổ chức chưa phê duyệt token. |
+| "Resource not accessible by personal access token" (403) khi đăng nhập hoặc xuất bản | Token không có quyền trên repo. Kiểm tra theo thứ tự: (1) **Resource owner** của token là **MVALabVision** (tổ chức), không phải tài khoản cá nhân; (2) **Repository access** có chọn `ConceptsMVA`; (3) **Contents: Read and write**; (4) nếu tổ chức bật yêu cầu phê duyệt, chủ tổ chức duyệt tại https://github.com/organizations/MVALabVision/settings/personal-access-token-requests. Bước đăng nhập tự thử đọc nhánh và ghi thử một blob rỗng để phát hiện lỗi này sớm và báo đúng nguyên nhân. |
 | Rate limit (403) | Token có 5.000 request/giờ; chờ theo thời gian báo. |
 | Link mở ra 404 ngay sau khi "Published" | CDN của GitHub Pages có thể trễ ~1 phút. Tải lại. Nếu kéo dài, kiểm tra tab Actions. |
 | Concept trắng trang / lỗi console | Mở DevTools (F12) → Console. Thường do đường dẫn tuyệt đối `/assets/…`, tài nguyên `http://`, hoặc thiếu file (giao diện đã cảnh báo lúc upload). |

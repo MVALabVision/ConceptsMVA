@@ -249,6 +249,7 @@ input:disabled { background: var(--surface-2); color: var(--muted); }
 .hint.warn { color: var(--warn); }
 .form-error { color: var(--err); background: var(--err-soft); border: 1px solid color-mix(in srgb, var(--err) 30%, transparent); padding: 10px 12px; border-radius: var(--radius-sm); font-size: 13.5px; word-break: break-word; }
 .steps { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px; display: grid; gap: 4px; }
+.auth-links { display: flex; gap: 8px; flex-wrap: wrap; }
 .check { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; color: var(--muted); }
 .check input { margin-top: 3px; }
 

@@ -77,6 +77,27 @@ export class GitHubClient {
     return this.request('GET', this.repoPath);
   }
 
+  // Verify what the token can really do on this repository. Fine-grained tokens expose no
+  // scope list, so the only reliable check is to try: read the branch ref, then create a tiny
+  // blob. The blob is content-addressed (repeated probes add nothing) and unreferenced, so it
+  // never appears in the repository and is garbage-collected by GitHub.
+  async probeAccess() {
+    try {
+      await this.request('GET', `${this.repoPath}/git/ref/heads/${this.branch}`);
+    } catch (e) {
+      if (e.status === 409) throw new GitHubError(e.message, { status: 409, code: 'EMPTY_REPO', data: e.data });
+      if (e.status === 403 || e.status === 404 || e.status === 401) throw new GitHubError(e.message, { status: e.status, code: 'NO_REPO_ACCESS', data: e.data });
+      throw e;
+    }
+    try {
+      await this.request('POST', `${this.repoPath}/git/blobs`, { content: 'mva-concept-studio access probe\n', encoding: 'utf-8' });
+    } catch (e) {
+      if (e.status === 403 || e.status === 404 || e.status === 401) throw new GitHubError(e.message, { status: e.status, code: 'NO_WRITE', data: e.data });
+      throw e;
+    }
+    return true;
+  }
+
   async getHead() {
     let ref;
     try {

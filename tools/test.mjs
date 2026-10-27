@@ -56,7 +56,12 @@ class FakeGitHub {
       const body = init.body ? JSON.parse(init.body) : null;
       const rp = `/repos/${this.owner}/${this.repo}`;
       if (!auth && !u.pathname.startsWith(`${rp}/compare/`) && u.pathname !== rp) return json(401, { message: 'Requires authentication' });
-      if (auth && auth !== 'Bearer good-token') return json(401, { message: 'Bad credentials' });
+      const tok = auth ? auth.replace('Bearer ', '') : null;
+      if (auth && !['good-token', 'readonly-token', 'noaccess-token'].includes(tok)) return json(401, { message: 'Bad credentials' });
+      // Simulated fine-grained tokens: wrong resource owner (no repo access) and read-only Contents permission.
+      const patErr = () => json(403, { message: 'Resource not accessible by personal access token' });
+      if (tok === 'noaccess-token' && u.pathname.startsWith(`${rp}/`)) return patErr();
+      if (tok === 'readonly-token' && method !== 'GET' && u.pathname.startsWith(`${rp}/`)) return patErr();
       if (u.pathname === '/user') return json(200, { login: 'tester', avatar_url: 'https://avatars.githubusercontent.com/u/1?v=4' });
       if (u.pathname === rp) return json(200, { full_name: `${this.owner}/${this.repo}`, default_branch: this.branch, permissions: this.permissions });
       if (u.pathname === `${rp}/git/ref/heads/${this.branch}`) return json(200, { ref: `refs/heads/${this.branch}`, object: { type: 'commit', sha: this.head } });
@@ -227,6 +232,14 @@ console.log('\ngithub.js');
     assert.equal((await c.whoAmI()).login, 'tester');
     assert.equal((await c.getRepo()).permissions.push, true);
     await assert.rejects(makeClient(fake, 'bad').whoAmI(), (e) => e instanceof gh.GitHubError && e.status === 401);
+  });
+
+  await test('probeAccess distinguishes no-access, read-only and writable tokens', async () => {
+    const fake = new FakeGitHub({ files: { 'data/concepts.json': baseIndex } });
+    await assert.rejects(makeClient(fake, 'noaccess-token').probeAccess(), (e) => e.code === 'NO_REPO_ACCESS' && e.status === 403);
+    await assert.rejects(makeClient(fake, 'readonly-token').probeAccess(), (e) => e.code === 'NO_WRITE' && e.status === 403);
+    assert.equal(await makeClient(fake).probeAccess(), true);
+    assert.equal(fake.head, fake.head, 'probe never moves the branch');
   });
 
   await test('publishConcept creates folder + index in one commit', async () => {
@@ -425,6 +438,20 @@ console.log('\napp.js (jsdom end-to-end with simulated GitHub + Pages)');
     $('#form-auth').dispatchEvent(new window.Event('submit', { cancelable: true }));
     await until(() => !$('#auth-error').hidden);
     assert.match($('#auth-error').textContent, /rejected|401/i);
+    // Token scoped to the wrong resource owner (or unapproved by the org): read of the repo is refused.
+    $('#auth-error').hidden = true;
+    $('#f-token').value = 'noaccess-token';
+    $('#form-auth').dispatchEvent(new window.Event('submit', { cancelable: true }));
+    await until(() => !$('#auth-error').hidden);
+    assert.match($('#auth-error').textContent, /Resource owner is MVALabVision/);
+    assert.ok($('#user-chip').hidden, 'not signed in');
+    // Token with Contents: read only.
+    $('#auth-error').hidden = true;
+    $('#f-token').value = 'readonly-token';
+    $('#form-auth').dispatchEvent(new window.Event('submit', { cancelable: true }));
+    await until(() => !$('#auth-error').hidden);
+    assert.match($('#auth-error').textContent, /Read and write/);
+    assert.ok($('#user-chip').hidden, 'not signed in');
     $('#f-token').value = 'good-token';
     $('#form-auth').dispatchEvent(new window.Event('submit', { cancelable: true }));
     await until(() => !$('#user-chip').hidden);

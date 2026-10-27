@@ -68,6 +68,9 @@ function formatError(e) {
     if (e.code === 'NOT_FOUND') return t('err.notFound', { slug: (state.form && state.form.slug) || (state.edit && state.edit.slug) || (state.del && state.del.slug) || '' });
     if (e.code === 'TRUNCATED') return t('err.truncated');
     if (e.code === 'EMPTY_REPO') return t('err.emptyRepo');
+    if (e.code === 'NO_REPO_ACCESS') return t('auth.noRepoAccess', { owner: CONFIG.owner, repo: CONFIG.repo, msg: `${e.message} (HTTP ${e.status})` });
+    if (e.code === 'NO_WRITE') return t('auth.noWrite', { owner: CONFIG.owner, repo: CONFIG.repo, msg: `${e.message} (HTTP ${e.status})` });
+    if (e.status === 403 && /access token|not accessible/i.test(e.message)) return t('err.pat403', { owner: CONFIG.owner, repo: CONFIG.repo, msg: `${e.message} (HTTP ${e.status})` });
     if (e.status === 401) return t('auth.invalid', { status: e.status });
     return t('err.generic', { msg: `${e.message}${e.status ? ` (HTTP ${e.status})` : ''}` });
   }
@@ -377,10 +380,8 @@ async function copyLink(url) {
 async function signIn(token, remember) {
   const client = new GitHubClient({ token, owner: CONFIG.owner, repo: CONFIG.repo, branch: CONFIG.branch });
   const user = await client.whoAmI();
-  const repo = await client.getRepo();
-  if (!repo || !repo.permissions || !repo.permissions.push) {
-    throw new GitHubError(t('auth.noPush', { owner: CONFIG.owner, repo: CONFIG.repo }), { code: 'NO_PUSH', status: 403 });
-  }
+  // The repository "permissions" field reflects the user, not the token, so test the token itself.
+  await client.probeAccess();
   if (remember !== null) storeToken(token, remember);
   state.client = client;
   state.user = user;
@@ -403,6 +404,8 @@ function openAuthDialog() {
   $('#f-remember').checked = false;
   $('#auth-error').hidden = true;
   $('#auth-step2').textContent = t('auth.step2', { owner: CONFIG.owner, repo: CONFIG.repo });
+  $('#auth-step4').textContent = t('auth.step4', { owner: CONFIG.owner });
+  $('#auth-approvals').href = `https://github.com/organizations/${CONFIG.owner}/settings/personal-access-token-requests`;
   const params = new URLSearchParams({
     name: `${CONFIG.repo} Concept Studio`,
     description: `Publish concepts to ${CONFIG.owner}/${CONFIG.repo}`,
@@ -430,7 +433,7 @@ async function submitAuth(e) {
     closeDialog($('#dlg-auth'));
     toast(t('auth.signedInAs', { login: state.user.login }), 'ok');
   } catch (ex) {
-    err.textContent = ex instanceof GitHubError && ex.code === 'NO_PUSH' ? ex.message : formatError(ex);
+    err.textContent = formatError(ex);
     err.hidden = false;
   } finally {
     btn.disabled = false;

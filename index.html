@@ -125,8 +125,12 @@
           <li data-i18n="auth.step1"></li>
           <li id="auth-step2"></li>
           <li data-i18n="auth.step3"></li>
+          <li id="auth-step4"></li>
         </ol>
-        <p><a id="auth-github-link" class="btn btn-outline btn-sm" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer"><span data-i18n="auth.openGithub">Create token on GitHub</span> ↗</a></p>
+        <p class="auth-links">
+          <a id="auth-github-link" class="btn btn-outline btn-sm" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer"><span data-i18n="auth.openGithub">Create token on GitHub</span> ↗</a>
+          <a id="auth-approvals" class="btn btn-ghost btn-sm" href="https://github.com/organizations/MVALabVision/settings/personal-access-token-requests" target="_blank" rel="noopener noreferrer"><span data-i18n="auth.openApprovals">Pending token approvals</span> ↗</a>
+        </p>
         <div class="field">
           <label for="f-token" data-i18n="auth.tokenLabel">GitHub token</label>
           <input id="f-token" type="password" autocomplete="off" spellcheck="false" required class="mono" placeholder="github_pat_…">
