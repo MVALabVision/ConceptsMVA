@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://avatars.githubusercontent.com; connect-src 'self' https://api.github.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="MVA Lab Concept Studio — interactive 3D concept library for machine vision and industrial automation projects.">
+  <title>MVA Lab — Concept Studio</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script src="assets/vendor/jszip.min.js" defer></script>
+  <script type="module" src="assets/js/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="./" aria-label="MVA Lab — Concept Studio">
+        <img src="assets/img/logo.svg" alt="" width="34" height="34">
+        <span class="brand-text"><strong>MVA Lab</strong><span data-i18n="app.tagline">Concept Studio</span></span>
+      </a>
+      <nav class="topnav" aria-label="Site">
+        <button id="btn-help" class="btn btn-ghost" type="button" aria-expanded="false" aria-controls="help">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7v.5"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>
+          <span data-i18n="nav.help">Help</span>
+        </button>
+        <button id="btn-lang" class="btn btn-ghost" type="button" data-i18n="lang.switch">Tiếng Việt</button>
+        <button id="btn-theme" class="btn btn-icon" type="button" data-i18n-aria="theme.toggle" aria-label="Toggle theme">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+        </button>
+        <button id="btn-signin" class="btn btn-outline" type="button">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <span data-i18n="nav.signIn">Admin sign in</span>
+        </button>
+        <div id="user-chip" class="user-chip" hidden>
+          <img id="user-avatar" alt="" width="26" height="26">
+          <span id="user-login" class="mono"></span>
+          <button id="btn-signout" class="btn btn-ghost btn-sm" type="button" data-i18n="nav.signOut">Sign out</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">MVA Lab · Machine Vision &amp; Automation</p>
+        <h1 data-i18n="hero.title">3D Concept Library</h1>
+        <p class="lead" data-i18n="hero.subtitle"></p>
+      </div>
+      <div class="hero-actions">
+        <button id="btn-upload" class="btn btn-primary btn-lg" type="button" hidden>
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 4 4m-4-4-4 4"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+          <span data-i18n="hero.upload">Upload New Concept</span>
+        </button>
+      </div>
+    </section>
+
+    <div id="banner" class="banner" hidden></div>
+
+    <section class="toolbar" aria-label="Filters">
+      <label class="search">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+        <input id="search" type="search" autocomplete="off" data-i18n-ph="search.placeholder" placeholder="Search…" aria-label="Search concepts">
+      </label>
+      <select id="filter-project" aria-label="Project"></select>
+      <select id="filter-status" aria-label="Status" hidden></select>
+      <select id="sort" aria-label="Sort"></select>
+      <span id="count" class="count"></span>
+    </section>
+
+    <section id="grid" class="grid" aria-live="polite"></section>
+    <div id="list-state" class="state" hidden></div>
+
+    <section id="help" class="help" hidden>
+      <h2 data-i18n="help.title">How it works</h2>
+      <div class="help-cols">
+        <div>
+          <h3 data-i18n="help.visitors">For customers and viewers</h3>
+          <ol>
+            <li data-i18n="help.visitor.1"></li>
+            <li data-i18n="help.visitor.2"></li>
+            <li data-i18n="help.visitor.3"></li>
+          </ol>
+        </div>
+        <div>
+          <h3 data-i18n="help.admins">For administrators</h3>
+          <ol>
+            <li data-i18n="help.admin.1"></li>
+            <li data-i18n="help.admin.2"></li>
+            <li data-i18n="help.admin.3"></li>
+            <li data-i18n="help.admin.4"></li>
+            <li data-i18n="help.admin.5"></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <span data-i18n="footer.text"></span>
+    <a id="repo-link" href="https://github.com/MVALabVision/ConceptsMVA" target="_blank" rel="noopener noreferrer">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 0 0-3 18.5c.5.1.7-.2.7-.5v-1.8c-2.7.6-3.3-1.2-3.3-1.2-.4-1.1-1-1.4-1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.8.8.1-.6.3-1.1.6-1.3-2.1-.2-4.4-1.1-4.4-4.7 0-1 .4-1.9 1-2.6-.1-.2-.4-1.2.1-2.5 0 0 .8-.3 2.6 1a9 9 0 0 1 4.8 0c1.8-1.3 2.6-1 2.6-1 .5 1.3.2 2.3.1 2.5.6.7 1 1.6 1 2.6 0 3.6-2.3 4.5-4.4 4.7.3.3.6.9.6 1.8v2.6c0 .3.2.6.7.5A9.5 9.5 0 0 0 12 2.5z"/></svg>
+      <span data-i18n="footer.repo">Repository</span>
+    </a>
+  </footer>
+
+  <!-- Admin sign-in -->
+  <dialog id="dlg-auth" class="dlg" aria-labelledby="auth-title">
+    <form id="form-auth" novalidate>
+      <header class="dlg-head">
+        <h2 id="auth-title" data-i18n="auth.title">Administrator sign in</h2>
+        <button type="button" class="btn btn-icon" data-close data-i18n-aria="a11y.close" aria-label="Close">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+      <div class="dlg-body">
+        <p class="muted" data-i18n="auth.intro"></p>
+        <ol class="steps">
+          <li data-i18n="auth.step1"></li>
+          <li id="auth-step2"></li>
+          <li data-i18n="auth.step3"></li>
+        </ol>
+        <p><a id="auth-github-link" class="btn btn-outline btn-sm" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer"><span data-i18n="auth.openGithub">Create token on GitHub</span> ↗</a></p>
+        <div class="field">
+          <label for="f-token" data-i18n="auth.tokenLabel">GitHub token</label>
+          <input id="f-token" type="password" autocomplete="off" spellcheck="false" required class="mono" placeholder="github_pat_…">
+        </div>
+        <label class="check">
+          <input id="f-remember" type="checkbox">
+          <span data-i18n="auth.remember"></span>
+        </label>
+        <p id="auth-error" class="form-error" role="alert" hidden></p>
+      </div>
+      <footer class="dlg-foot">
+        <button type="button" class="btn btn-ghost" data-close data-i18n="form.cancel">Cancel</button>
+        <button type="submit" id="btn-auth-submit" class="btn btn-primary" data-i18n="auth.submit">Sign in</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Upload / Replace -->
+  <dialog id="dlg-upload" class="dlg dlg-wide" aria-labelledby="upload-title">
+    <form id="form-upload" novalidate>
+      <header class="dlg-head">
+        <h2 id="upload-title">Upload New Concept</h2>
+        <button type="button" class="btn btn-icon" data-close data-i18n-aria="a11y.close" aria-label="Close">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+      <div class="dlg-body form-grid">
+        <div class="field col-2">
+          <label for="f-name" data-i18n="form.name">Concept name</label>
+          <input id="f-name" name="name" required maxlength="120" data-i18n-ph="form.name.ph" autocomplete="off">
+          <p id="f-name-dup" class="hint warn" hidden></p>
+        </div>
+        <div class="field">
+          <label for="f-project" data-i18n="form.project">Project</label>
+          <input id="f-project" name="project" maxlength="80" list="project-list" data-i18n-ph="form.project.ph" autocomplete="off">
+          <datalist id="project-list"></datalist>
+        </div>
+        <div class="field">
+          <label for="f-status" data-i18n="form.status">Status</label>
+          <select id="f-status" name="status">
+            <option value="published" data-i18n="status.published">Published</option>
+            <option value="archived" data-i18n="status.archived">Archived</option>
+          </select>
+        </div>
+        <div class="field col-2">
+          <label for="f-desc" data-i18n="form.description">Short description</label>
+          <textarea id="f-desc" name="description" rows="2" maxlength="600" data-i18n-ph="form.description.ph"></textarea>
+        </div>
+
+        <div class="field col-2">
+          <span class="label" data-i18n="form.file">Concept file</span>
+          <div id="dropzone" class="dropzone">
+            <input id="f-file" type="file" accept=".html,.htm,.zip,text/html,application/zip,application/x-zip-compressed" class="sr-only">
+            <label for="f-file" class="btn btn-outline" data-i18n="form.file.choose">Choose file</label>
+            <span class="muted" data-i18n="form.file.drop">or drop it here</span>
+            <span id="f-file-name" class="file-name mono"></span>
+          </div>
+          <p class="hint" data-i18n="form.file.hint"></p>
+          <div id="pkg-panel" class="pkg" hidden>
+            <div class="pkg-head">
+              <span id="pkg-summary" class="pkg-summary"></span>
+              <button type="button" id="btn-preview" class="btn btn-outline btn-sm" hidden>
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>
+                <span data-i18n="form.preview">Preview</span>
+              </button>
+            </div>
+            <p id="pkg-title" class="hint" hidden></p>
+            <ul id="pkg-warnings" class="pkg-warnings"></ul>
+            <div id="pkg-entry-row" class="field" hidden>
+              <label for="f-entry" data-i18n="form.entry">Entry HTML file</label>
+              <select id="f-entry" class="mono"></select>
+              <p class="hint" data-i18n="form.entry.hint"></p>
+              <p id="f-entry-change" class="hint warn" hidden></p>
+            </div>
+            <details id="pkg-files-wrap">
+              <summary data-i18n="pkg.files">Files in package</summary>
+              <ul id="pkg-files" class="file-list mono"></ul>
+            </details>
+          </div>
+        </div>
+
+        <div class="field col-2">
+          <label for="f-slug" data-i18n="form.slug">URL slug</label>
+          <div class="slug-row">
+            <span id="slug-prefix" class="slug-prefix mono">concepts/</span>
+            <input id="f-slug" name="slug" maxlength="64" spellcheck="false" autocomplete="off" class="mono">
+          </div>
+          <p id="f-slug-status" class="hint" hidden></p>
+          <p id="f-slug-hint" class="hint" data-i18n="form.slug.hint"></p>
+          <p class="url-preview"><span data-i18n="form.url">Public link</span>: <code id="f-url" class="mono"></code></p>
+        </div>
+
+        <div class="field col-2">
+          <label for="f-thumb" data-i18n="form.thumb">Thumbnail (optional)</label>
+          <div class="thumb-row">
+            <input id="f-thumb" type="file" accept="image/png,image/jpeg,image/webp">
+            <img id="f-thumb-preview" alt="" hidden>
+          </div>
+          <p class="hint" data-i18n="form.thumb.hint"></p>
+        </div>
+
+        <p id="form-error" class="form-error col-2" role="alert" hidden></p>
+      </div>
+      <footer class="dlg-foot">
+        <button type="button" class="btn btn-ghost" data-close data-i18n="form.cancel">Cancel</button>
+        <button type="submit" id="btn-submit-upload" class="btn btn-primary">Publish</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Edit details -->
+  <dialog id="dlg-edit" class="dlg" aria-labelledby="edit-title">
+    <form id="form-edit" novalidate>
+      <header class="dlg-head">
+        <h2 id="edit-title">Edit Details</h2>
+        <button type="button" class="btn btn-icon" data-close data-i18n-aria="a11y.close" aria-label="Close">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+      <div class="dlg-body form-grid">
+        <div class="field col-2">
+          <label for="e-name" data-i18n="form.name">Concept name</label>
+          <input id="e-name" required maxlength="120" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="e-project" data-i18n="form.project">Project</label>
+          <input id="e-project" maxlength="80" list="project-list" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="e-status" data-i18n="form.status">Status</label>
+          <select id="e-status">
+            <option value="published" data-i18n="status.published">Published</option>
+            <option value="archived" data-i18n="status.archived">Archived</option>
+          </select>
+        </div>
+        <div class="field col-2">
+          <label for="e-desc" data-i18n="form.description">Short description</label>
+          <textarea id="e-desc" rows="3" maxlength="600"></textarea>
+          <p class="hint" data-i18n="form.status.hint"></p>
+        </div>
+        <div class="field col-2">
+          <label for="e-thumb" data-i18n="form.thumb">Thumbnail (optional)</label>
+          <div class="thumb-row">
+            <input id="e-thumb" type="file" accept="image/png,image/jpeg,image/webp">
+            <img id="e-thumb-preview" alt="" hidden>
+          </div>
+        </div>
+        <p class="url-preview col-2"><span data-i18n="form.url">Public link</span>: <code id="e-url" class="mono"></code></p>
+        <p id="edit-error" class="form-error col-2" role="alert" hidden></p>
+      </div>
+      <footer class="dlg-foot">
+        <button type="button" class="btn btn-ghost" data-close data-i18n="form.cancel">Cancel</button>
+        <button type="submit" id="btn-submit-edit" class="btn btn-primary" data-i18n="form.save">Save changes</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Delete -->
+  <dialog id="dlg-delete" class="dlg" aria-labelledby="delete-title">
+    <form id="form-delete" novalidate>
+      <header class="dlg-head">
+        <h2 id="delete-title" data-i18n="delete.title">Delete concept</h2>
+        <button type="button" class="btn btn-icon" data-close data-i18n-aria="a11y.close" aria-label="Close">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+      <div class="dlg-body">
+        <p id="delete-body"></p>
+        <p class="hint" data-i18n="delete.archiveHint"></p>
+        <div class="field">
+          <label for="d-confirm" data-i18n="delete.confirmLabel">Type the slug to confirm</label>
+          <input id="d-confirm" class="mono" autocomplete="off" spellcheck="false">
+        </div>
+        <p id="delete-error" class="form-error" role="alert" hidden></p>
+      </div>
+      <footer class="dlg-foot">
+        <button type="button" class="btn btn-ghost" data-close data-i18n="form.cancel">Cancel</button>
+        <button type="submit" id="btn-submit-delete" class="btn btn-danger" data-i18n="delete.submit" disabled>Delete permanently</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- Progress / result -->
+  <dialog id="dlg-progress" class="dlg" aria-labelledby="progress-title">
+    <header class="dlg-head">
+      <h2 id="progress-title" data-i18n="progress.title">Publishing…</h2>
+      <button type="button" class="btn btn-icon" id="btn-progress-close" data-close data-i18n-aria="a11y.close" aria-label="Close" hidden>
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </header>
+    <div class="dlg-body">
+      <ol id="progress-steps" class="progress"></ol>
+      <p id="progress-detail" class="hint mono"></p>
+      <div id="result" class="result" hidden>
+        <div id="result-icon" class="result-icon" aria-hidden="true"></div>
+        <h3 id="result-title"></h3>
+        <p id="result-body" class="muted"></p>
+        <div id="result-url-box" class="url-box" hidden>
+          <code id="result-url" class="mono"></code>
+          <button type="button" id="btn-result-copy" class="btn btn-outline btn-sm">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg>
+            <span data-i18n="result.copy">Copy Link</span>
+          </button>
+          <a id="btn-result-open" class="btn btn-primary btn-sm" target="_blank" rel="noopener noreferrer"><span data-i18n="result.open">Open Concept</span> ↗</a>
+        </div>
+        <p id="result-verify" class="hint" hidden></p>
+        <p id="result-error" class="form-error" hidden></p>
+        <div id="result-links" class="result-links"></div>
+      </div>
+    </div>
+    <footer class="dlg-foot">
+      <button type="button" id="btn-result-close" class="btn btn-primary" data-close data-i18n="result.close" hidden>Close</button>
+    </footer>
+  </dialog>
+
+  <!-- Preview (isolated) -->
+  <dialog id="dlg-preview" class="dlg dlg-full" aria-labelledby="preview-title">
+    <header class="dlg-head">
+      <h2 id="preview-title" data-i18n="preview.title">Preview (isolated sandbox)</h2>
+      <button type="button" class="btn btn-icon" data-close data-i18n-aria="a11y.close" aria-label="Close">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </header>
+    <p class="hint preview-note" data-i18n="preview.note"></p>
+    <div id="preview-host" class="preview-host"></div>
+  </dialog>
+</body>
+</html>

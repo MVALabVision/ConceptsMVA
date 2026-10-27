@@ -1,0 +1,17 @@
+{
+  "name": "mva-concept-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MVA Lab — Concept Studio: static 3D concept library on GitHub Pages",
+  "type": "module",
+  "scripts": {
+    "validate": "node tools/validate.mjs",
+    "test": "node tools/test.mjs",
+    "serve": "python -m http.server 8080"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "jszip": "^3.10.1"
+  }
+}

@@ -1,0 +1,1078 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Trạm PAS HFS VINA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: engineering title block on top, 3D stage with operator controls on the left, operating-flow panel on the right */
+:root{
+  --bg:#eef1f4; --surface:#ffffff; --surface-2:#e7ecf1; --fg:#131c26; --muted:#556272; --line:#d2d9e1;
+  --accent:#0a5bb0; --accent-ink:#ffffff; --accent-soft:#dce9f7;
+  --proj:#11a058; --ok:#13854a; --warn:#a86a00; --err:#c4332a;
+  --vp-bg:#e8ecf0; --vp-floor:#dde3e9; --vp-grid:#bfc9d3;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1217; --surface:#141b22; --surface-2:#1a232c; --fg:#e3e9ef; --muted:#93a1b0; --line:#27323d;
+    --accent:#5ea4ff; --accent-ink:#06121f; --accent-soft:#16304d;
+    --proj:#3ddc84; --ok:#3ccf7d; --warn:#f0b03c; --err:#ff6b5e;
+    --vp-bg:#11181f; --vp-floor:#161f28; --vp-grid:#283541;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1217; --surface:#141b22; --surface-2:#1a232c; --fg:#e3e9ef; --muted:#93a1b0; --line:#27323d;
+  --accent:#5ea4ff; --accent-ink:#06121f; --accent-soft:#16304d;
+  --proj:#3ddc84; --ok:#3ccf7d; --warn:#f0b03c; --err:#ff6b5e;
+  --vp-bg:#11181f; --vp-floor:#161f28; --vp-grid:#283541;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.5}
+.page{max-width:1640px;margin:0 auto;padding-block:16px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+
+/* title block */
+.tb{display:grid;grid-template-columns:minmax(0,1fr) auto;border:1px solid var(--line);background:var(--surface);border-radius:10px;overflow:hidden}
+.tb-main{padding:16px 20px;min-width:0}
+.eyebrow{margin:0 0 4px;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(28px,3.4vw,40px);line-height:1.05;letter-spacing:.01em;text-wrap:balance}
+h1 .pas{color:var(--accent)}
+.sub{margin:6px 0 0;color:var(--muted);max-width:70ch}
+.tb-grid{margin:0;display:grid;grid-template-columns:repeat(2,minmax(130px,auto));border-left:1px solid var(--line)}
+.tb-grid div{padding:9px 16px;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
+.tb-grid div:nth-child(2n){border-right:0}
+.tb-grid div:nth-last-child(-n+2){border-bottom:0}
+.tb-grid dt{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.tb-grid dd{margin:2px 0 0;font-family:var(--f-mono);font-size:13px;font-variant-numeric:tabular-nums}
+@media (max-width:760px){.tb{grid-template-columns:1fr}.tb-grid{border-left:0;border-top:1px solid var(--line)}}
+
+/* workspace */
+.ws{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;align-items:start}
+@media (max-width:1080px){.ws{grid-template-columns:minmax(0,1fr)}}
+.stage{display:grid;gap:12px;min-width:0}
+.vp{position:relative;height:clamp(440px,68vh,780px);border-radius:10px;overflow:hidden;background:var(--vp-bg);border:1px solid var(--line);touch-action:none}
+.vp canvas{display:block;width:100%;height:100%;outline:none}
+@media (max-width:640px){.vp{height:62vh;min-height:360px}}
+.hud{position:absolute;z-index:3;display:flex;gap:6px;align-items:center}
+.hud.tl{top:12px;left:12px;right:12px;flex-wrap:wrap;pointer-events:none}
+.chip{display:inline-flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--surface) 88%,transparent);border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 6px;backdrop-filter:blur(6px);max-width:100%}
+.chip b{font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.06em;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.chip span{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip.err b{background:var(--err);color:#fff}
+.tower{display:inline-flex;gap:4px;background:color-mix(in srgb,var(--surface) 88%,transparent);border:1px solid var(--line);border-radius:999px;padding:6px 10px;align-items:center;font-size:12px;color:var(--muted)}
+.tower i{width:10px;height:10px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);display:inline-block}
+.tower i.on.r{background:var(--err);border-color:var(--err)}
+.tower i.on.a{background:var(--warn);border-color:var(--warn)}
+.tower i.on.g{background:var(--ok);border-color:var(--ok)}
+.hud.br{bottom:12px;right:12px;flex-wrap:wrap;justify-content:flex-end;left:12px}
+.views{display:inline-flex;background:color-mix(in srgb,var(--surface) 90%,transparent);border:1px solid var(--line);border-radius:8px;padding:3px;backdrop-filter:blur(6px);flex-wrap:wrap}
+.views button{font:500 12.5px var(--f-body);color:var(--fg);background:none;border:0;border-radius:6px;padding:6px 10px;cursor:pointer}
+.views button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.views button:focus-visible,.btn:focus-visible,.seg:focus-visible,.tab:focus-visible,.step:focus-visible,.hw-item:focus-visible,.lbl:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.labels{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden}
+.lbl{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;display:flex;align-items:center;gap:6px;transform-origin:0 0;background:none;border:0;padding:0;font:inherit;color:inherit}
+.lbl .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent);flex:none}
+.lbl .tag{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px 8px 3px 4px;font-size:12px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px rgb(0 0 0 / .08)}
+.lbl .tag em{font-style:normal;font-family:var(--f-mono);font-size:11px;background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:1px 5px}
+.lbl.server .dot{background:var(--proj)}
+.lbl:hover .tag,.lbl.sel .tag{border-color:var(--accent)}
+.hint{position:absolute;left:12px;bottom:12px;z-index:3;font-size:12px;color:var(--muted);background:color-mix(in srgb,var(--surface) 85%,transparent);border-radius:6px;padding:4px 8px;pointer-events:none}
+@media (max-width:640px){.hint{display:none}}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.btn{font:600 13px var(--f-body);border:1px solid var(--line);background:var(--surface-2);color:var(--fg);border-radius:8px;padding:8px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:36px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);min-width:150px;justify-content:center}
+.btn .ico{font-size:11px}
+.timeline{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;flex:1 1 280px;min-width:220px}
+.seg{position:relative;height:30px;border-radius:6px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;overflow:hidden;padding:0;font:600 12px var(--f-mono);color:var(--muted)}
+.seg .fill{position:absolute;inset:0 auto 0 0;width:0;background:color-mix(in srgb,var(--accent) 26%,transparent)}
+.seg.cur{border-color:var(--accent);color:var(--fg)}
+.seg.cur.errs{border-color:var(--err)}
+.seg span{position:relative}
+.toggles{display:flex;flex-wrap:wrap;gap:6px 14px}
+.tg{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;user-select:none}
+.tg input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+.tg.danger input{accent-color:var(--err)}
+.speed{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--surface-2);color:var(--fg);border-radius:8px;padding:7px 8px;min-height:36px}
+
+/* telemetry */
+.tele{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:12px}
+@media (max-width:760px){.tele{grid-template-columns:minmax(0,1fr)}}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kpi{background:var(--surface);padding:10px 12px;min-width:0}
+.kpi dt{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.kpi dd{margin:2px 0 0;font-family:var(--f-display);font-weight:700;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi dd small{font-family:var(--f-body);font-size:12px;font-weight:500;color:var(--muted);margin-left:3px}
+.kpi.err dd{color:var(--err)}
+.log{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0;display:flex;flex-direction:column}
+.log h3,.panel h3{margin:0 0 6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.log ol{list-style:none;margin:0;padding:0;font-family:var(--f-mono);font-size:12px;max-height:172px;overflow:auto;display:flex;flex-direction:column-reverse}
+.log li{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:8px;padding:3px 0;border-top:1px dashed var(--line);align-items:baseline}
+.log time{color:var(--muted);font-variant-numeric:tabular-nums}
+.log .k{font-size:10.5px;font-weight:500;border-radius:3px;padding:0 5px;background:var(--surface-2);color:var(--muted)}
+.log .k.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+.log .k.err{background:color-mix(in srgb,var(--err) 18%,transparent);color:var(--err)}
+.log .k.data{background:var(--accent-soft);color:var(--accent)}
+.log .msg{overflow-wrap:anywhere}
+
+/* side panel */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0;position:sticky;top:max(12px,env(safe-area-inset-top,0px))}
+@media (max-width:1080px){.panel{position:static}}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.tab{font:600 13.5px var(--f-body);background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:12px 6px 10px;cursor:pointer}
+.tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.pane{padding:14px 16px 18px;display:grid;gap:14px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.step{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:8px;padding:7px 8px;cursor:pointer;font:inherit;color:inherit}
+.step:hover{background:var(--surface-2)}
+.step .n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:15px;border:1.5px solid var(--line);color:var(--muted)}
+.step .t{font-weight:600;font-size:13.5px;line-height:1.3}
+.step .s{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.step.done .n{background:var(--surface-2);color:var(--ok);border-color:color-mix(in srgb,var(--ok) 50%,var(--line))}
+.step.cur{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.step.cur .n{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.step.cur.errs{background:color-mix(in srgb,var(--err) 12%,transparent);border-color:color-mix(in srgb,var(--err) 45%,transparent)}
+.step.cur.errs .n{background:var(--err);border-color:var(--err);color:#fff}
+.detail{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:10px}
+.detail h4{margin:0;font-family:var(--f-display);font-weight:700;font-size:22px;line-height:1.1;letter-spacing:.01em}
+.detail p{margin:0;color:var(--muted);max-width:60ch}
+.roles{margin:0;display:grid;gap:6px}
+.roles div{display:grid;grid-template-columns:104px minmax(0,1fr);gap:8px;font-size:13px}
+.roles dt{font-weight:600;color:var(--fg)}
+.roles dd{margin:0;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-family:var(--f-mono);font-size:11px;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--muted)}
+.hw{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.hw-item{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;width:100%;text-align:left;background:none;border:1px solid var(--line);border-radius:8px;padding:9px 10px;cursor:pointer;font:inherit;color:inherit}
+.hw-item:hover,.hw-item.sel{border-color:var(--accent);background:var(--accent-soft)}
+.hw-item .code{font-family:var(--f-mono);font-size:12px;font-weight:500;color:var(--accent);padding-top:1px}
+.hw-item b{display:block;font-size:13.5px}
+.hw-item ul{margin:4px 0 0;padding-left:16px;color:var(--muted);font-size:12.5px}
+.hw-item li{margin:1px 0}
+.arch{width:100%;height:auto;display:block}
+.arch text{font-family:var(--f-body);font-size:10.5px;fill:var(--fg)}
+.arch .lab{fill:var(--muted);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+.arch .bx{fill:var(--surface-2);stroke:var(--line)}
+.arch .core{fill:var(--accent-soft);stroke:var(--accent)}
+.arch .mes{fill:color-mix(in srgb,var(--proj) 14%,var(--surface));stroke:var(--proj)}
+.arch .ln{stroke:var(--muted);fill:none;stroke-width:1.2}
+.arch .ah{fill:var(--muted)}
+.note{font-size:12px;color:var(--muted);border-left:2px solid var(--line);padding-left:10px;margin:0}
+footer.foot{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="page">
+  <header class="tb">
+    <div class="tb-main">
+      <p class="eyebrow">MVA LAB · Concept đề xuất cho HFS VINA – Innovation Team</p>
+      <h1><span class="pas">PAS</span> · Trạm lắp ráp chiếu sáng có AI kiểm soát</h1>
+      <p class="sub">Mô hình 3D trạm lắp ráp chỉ dẫn bằng máy chiếu, camera AI theo dõi thao tác tay, súng vặn vít kiểm soát lực và truy xuất dữ liệu về MES/SPC. Kéo để xoay, cuộn hoặc chụm hai ngón để phóng to.</p>
+    </div>
+    <dl class="tb-grid">
+      <div><dt>Số bản vẽ</dt><dd>MVA-PAS-HFS-01</dd></div>
+      <div><dt>Phiên bản</dt><dd>Rev A · Concept</dd></div>
+      <div><dt>Ngày</dt><dd>26/10/2026</dd></div>
+      <div><dt>Kích thước trạm</dt><dd>1800×900×2200 mm</dd></div>
+    </dl>
+  </header>
+
+  <main class="ws">
+    <section class="stage" aria-label="Mô hình 3D và mô phỏng">
+      <div class="vp" id="viewport">
+        <div class="hud tl">
+          <div class="chip" id="chip"><b id="chipNo">BƯỚC 2/7</b><span id="chipName">Chiếu chỉ dẫn lấy linh kiện</span></div>
+          <div class="tower" aria-label="Trạng thái đèn tháp"><i class="r" id="tR"></i><i class="a" id="tA"></i><i class="g" id="tG"></i><span id="tText">Đang chạy</span></div>
+        </div>
+        <div class="labels" id="labels"></div>
+        <div class="hud br">
+          <div class="views" role="group" aria-label="Góc nhìn">
+            <button type="button" data-view="overview" aria-pressed="true">Tổng thể</button>
+            <button type="button" data-view="operator" aria-pressed="false">Góc công nhân</button>
+            <button type="button" data-view="top" aria-pressed="false">Từ trên xuống</button>
+            <button type="button" data-view="jig" aria-pressed="false">Đồ gá</button>
+            <button type="button" data-view="cabinet" aria-pressed="false">Tủ điện</button>
+          </div>
+        </div>
+        <div class="hint">Kéo: xoay · Chuột phải: dời · Cuộn: zoom</div>
+      </div>
+
+      <div class="controls">
+        <button type="button" class="btn primary" id="play"><span class="ico" id="playIco">❚❚</span><span id="playTxt">Tạm dừng</span></button>
+        <button type="button" class="btn" id="prev" aria-label="Bước trước">◀</button>
+        <button type="button" class="btn" id="next" aria-label="Bước sau">▶</button>
+        <div class="timeline" id="timeline" aria-label="Tiến trình 7 bước"></div>
+        <select class="speed" id="speed" aria-label="Tốc độ mô phỏng">
+          <option value="0.5">0,5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+        </select>
+        <div class="toggles">
+          <label class="tg danger"><input type="checkbox" id="tgErr"> Mô phỏng lấy sai ô</label>
+          <label class="tg"><input type="checkbox" id="tgLabels" checked> Nhãn thiết bị</label>
+          <label class="tg"><input type="checkbox" id="tgFov" checked> Vùng chiếu &amp; camera</label>
+          <label class="tg"><input type="checkbox" id="tgOp" checked> Công nhân</label>
+        </div>
+      </div>
+
+      <div class="tele">
+        <dl class="kpis">
+          <div class="kpi"><dt>Sản lượng (mô phỏng)</dt><dd id="kOk">0<small>sp</small></dd></div>
+          <div class="kpi"><dt>Cycle time ước tính</dt><dd>60<small>s/sp</small></dd></div>
+          <div class="kpi err"><dt>Lỗi thao tác đã chặn</dt><dd id="kBlk">0</dd></div>
+          <div class="kpi"><dt>Đạt lần đầu (FPY)</dt><dd>100<small>%</small></dd></div>
+        </dl>
+        <div class="log">
+          <h3>Nhật ký sự kiện trạm · gửi MES</h3>
+          <ol id="log" aria-live="polite"></ol>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel" aria-label="Thông tin hệ thống">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="t-flow" aria-controls="p-flow" aria-selected="true">Vận hành</button>
+        <button class="tab" role="tab" id="t-hw" aria-controls="p-hw" aria-selected="false">Phần cứng</button>
+        <button class="tab" role="tab" id="t-sw" aria-controls="p-sw" aria-selected="false">Phần mềm</button>
+      </div>
+
+      <div class="pane" id="p-flow" role="tabpanel" aria-labelledby="t-flow">
+        <ol class="steps" id="steps"></ol>
+        <div class="detail" id="detail"></div>
+      </div>
+
+      <div class="pane" id="p-hw" role="tabpanel" aria-labelledby="t-hw" hidden>
+        <h3>7 cụm phần cứng · bấm để xem trên mô hình</h3>
+        <ul class="hw" id="hwList"></ul>
+      </div>
+
+      <div class="pane" id="p-sw" role="tabpanel" aria-labelledby="t-sw" hidden>
+        <h3>Luồng dữ liệu trong trạm</h3>
+        <svg class="arch" viewBox="0 0 360 330" role="img" aria-label="Sơ đồ luồng dữ liệu: thiết bị đầu vào vào Step Engine và AI Vision, điều khiển máy chiếu, HMI, PLC, ghi hồ sơ và gửi MES/SPC">
+          <defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L8 4L0 8z"/></marker></defs>
+          <text class="lab" x="10" y="14">Đầu vào</text>
+          <rect class="bx" x="8" y="22" width="104" height="30" rx="5"/><text x="18" y="41">Camera AI ×2</text>
+          <rect class="bx" x="8" y="60" width="104" height="30" rx="5"/><text x="18" y="79">Đầu đọc mã 2D</text>
+          <rect class="bx" x="8" y="98" width="104" height="30" rx="5"/><text x="18" y="117">Súng vặn vít</text>
+          <rect class="bx" x="8" y="136" width="104" height="30" rx="5"/><text x="18" y="155">Cảm biến đồ gá</text>
+          <text class="lab" x="140" y="14">Phần mềm MVA</text>
+          <rect class="core" x="138" y="22" width="104" height="54" rx="6"/><text x="148" y="44">S2 · AI Vision</text><text x="148" y="62" class="lab">tay · vít · mẫu chuẩn</text>
+          <rect class="core" x="138" y="96" width="104" height="70" rx="6"/><text x="148" y="118">S1 · Step Engine</text><text x="148" y="136" class="lab">SOP · trình tự</text><text x="148" y="152" class="lab">khóa bước khi lỗi</text>
+          <text class="lab" x="268" y="14">Đầu ra</text>
+          <rect class="bx" x="266" y="22" width="86" height="30" rx="5"/><text x="276" y="41">Máy chiếu</text>
+          <rect class="bx" x="266" y="60" width="86" height="30" rx="5"/><text x="276" y="79">HMI 21,5"</text>
+          <rect class="bx" x="266" y="98" width="86" height="44" rx="5"/><text x="276" y="117">PLC · đèn tháp</text><text x="276" y="133" class="lab">còi · khóa</text>
+          <rect class="core" x="138" y="200" width="104" height="44" rx="6"/><text x="148" y="219">S3 · Truy xuất</text><text x="148" y="235" class="lab">hồ sơ theo serial</text>
+          <rect class="mes" x="138" y="276" width="104" height="44" rx="6"/><text x="148" y="295">MES / SPC HFS</text><text x="148" y="311" class="lab">REST · SQL · OPC UA</text>
+          <path class="ln" d="M112 37H138" marker-end="url(#ah)"/>
+          <path class="ln" d="M112 75H126V120H138" marker-end="url(#ah)"/>
+          <path class="ln" d="M112 113H126" />
+          <path class="ln" d="M112 151H126V140H138" marker-end="url(#ah)"/>
+          <path class="ln" d="M190 76V96" marker-end="url(#ah)"/>
+          <path class="ln" d="M242 120H254V37H266" marker-end="url(#ah)"/>
+          <path class="ln" d="M254 75H266" marker-end="url(#ah)"/>
+          <path class="ln" d="M254 120H266" marker-end="url(#ah)"/>
+          <path class="ln" d="M190 166V200" marker-end="url(#ah)"/>
+          <path class="ln" d="M190 244V276" marker-end="url(#ah)"/>
+        </svg>
+        <ul class="hw" id="swList"></ul>
+        <p class="note">Toàn bộ suy luận AI chạy tại IPC của trạm (on-premise), không phụ thuộc internet. Dữ liệu chỉ đi ra mạng nội bộ HFS tới MES/SPC.</p>
+      </div>
+    </aside>
+  </main>
+  <footer class="foot"><span>Concept minh họa · kích thước, số ô linh kiện, số vít và giá trị lực là ví dụ, sẽ chốt theo sản phẩm thực tế sau khảo sát.</span><span>MVA LAB VIETNAM · 2026</span></footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+'use strict';
+if(!window.THREE){ document.getElementById('viewport').insertAdjacentHTML('beforeend','<p style="position:absolute;inset:auto 16px 50% 16px;text-align:center">Không tải được thư viện 3D. Hãy tải lại trang.</p>'); return; }
+
+/* ---------------- data ---------------- */
+const STEPS=[
+ {name:'Quét lệnh & tải SOP',dur:5,real:6,actors:['H5 đầu đọc 2D','H4 IPC/HMI','S3 MES'],
+  desc:'Công nhân quét mã 2D trên phiếu công đoạn. IPC hỏi MES và nhận về BOM, SOP đúng phiên bản và tham số lực siết của model.',
+  roles:[['Đầu đọc 2D','Đọc mã lệnh WO-261026-0153 trên phiếu công đoạn.'],['MES','Trả về model HX-BR200, BOM, SOP v3.2, lực siết 0,50 N·m ±10%.'],['HMI','Hiển thị model, serial, danh sách 7 bước.'],['Đèn tháp','Vàng (chờ lệnh) chuyển sang xanh (đang chạy).']]},
+ {name:'Chiếu chỉ dẫn lấy linh kiện',dur:3.5,real:4,actors:['H1 máy chiếu','S1 Step Engine','H2 camera'],
+  desc:'Máy chiếu rọi khung sáng vào đúng ô linh kiện, vẽ mũi tên trên tấm chiếu và ghi nội dung bước ngay trên mặt bàn.',
+  roles:[['Máy chiếu','Rọi sáng ô B2, mũi tên trên tấm chiếu, nội dung bước trên bàn.'],['Camera AI','Bật vùng nhận dạng (pick zone) của ô B2.'],['HMI','Ảnh linh kiện khung đỡ BR-02, số lượng 1.']]},
+ {name:'AI xác nhận thao tác tay',dur:4.5,durErr:8,real:5,actors:['H2 camera','S2 AI Vision','H6 PLC/đèn tháp'],
+  desc:'Camera AI theo dõi bàn tay. Tay đi vào đúng vùng lấy thì bước được xác nhận tự động, không cần bấm nút.',
+  descErr:'Tay đi vào ô B3 (sai linh kiện). PLC bật đèn đỏ và còi, Step Engine khóa bước. Khi tay rút ra và vào đúng ô B2, hệ thống tự mở khóa.',
+  roles:[['Camera AI','Nhận diện bàn tay 30 khung hình/giây, kiểm tra tay nằm trong vùng B2.'],['Step Engine','Xác nhận bước, chuyển sang bước lắp.'],['Dữ liệu','Ghi thời điểm lấy linh kiện.']],
+  rolesErr:[['Camera AI','Phát hiện tay trong vùng B3, không phải B2.'],['PLC/đèn tháp','Đèn đỏ nhấp nháy, còi kêu, khóa bước.'],['Máy chiếu','Ô B3 đỏ, ô B2 xanh, chữ cảnh báo trên bàn.'],['Dữ liệu','Lưu sự kiện “lỗi đã chặn” kèm ảnh để phân tích.']]},
+ {name:'Lắp vào đồ gá theo hình chiếu',dur:4.5,real:12,actors:['H1 máy chiếu','H7 đồ gá','S1 Step Engine'],
+  desc:'Đường viền vị trí và mũi tên hướng lắp được chiếu thẳng lên sản phẩm. Cảm biến trên đồ gá xác nhận chi tiết đã nằm đúng chỗ.',
+  roles:[['Máy chiếu','Viền nét đứt đúng vị trí đặt khung đỡ và mũi tên hướng lắp.'],['Đồ gá','Cảm biến hiện diện S1 chuyển ON.'],['HMI','Video thao tác mẫu của công nhân lành nghề.']]},
+ {name:'Siết vít kiểm soát lực',dur:8,real:24,actors:['H5 súng vặn vít','H6 PLC','S2 đếm vít'],
+  desc:'Thứ tự 4 vít được chiếu lên sản phẩm. Súng vặn vít trả tín hiệu OK/NG kèm giá trị lực; đủ 4/4 vít OK mới cho sang bước.',
+  roles:[['Máy chiếu','Vòng tròn đánh số 1→2→3→4 tại từng lỗ vít, vít xong chuyển xanh.'],['Súng vặn vít','Ngắt theo lực, gửi OK/NG và giá trị N·m.'],['PLC','Đếm vít, chặn nếu thiếu vít hoặc NG.'],['Dữ liệu','Lưu lực siết từng vít theo serial.']]},
+ {name:'Kiểm tra Poka-Yoke bằng AI',dur:4.5,real:6,actors:['H2 camera 12 MP','H3 đèn dome','S2 AI Vision'],
+  desc:'Camera 12 MP chụp dưới đèn dome, so với ảnh mẫu chuẩn: đủ vít, đúng chi tiết, đúng hướng. Tỷ lệ phù hợp đạt ngưỡng thì ĐẠT.',
+  roles:[['Đèn dome','Bật sáng đều vùng sản phẩm khi chụp.'],['Camera AI','So sánh mẫu chuẩn: 98,7% ≥ ngưỡng 95%.'],['Nếu NG','Đèn đỏ, giữ sản phẩm trên đồ gá, chiếu vị trí lỗi.']]},
+ {name:'Lưu hồ sơ & gửi MES/SPC',dur:4,real:3,actors:['H4 IPC','S3 Truy xuất','MES/SPC'],
+  desc:'Hồ sơ theo serial gồm người làm, thời gian từng bước, lực siết từng vít và ảnh kiểm tra được lưu và gửi MES; biểu đồ SPC cập nhật.',
+  roles:[['Truy xuất','Lưu hồ sơ SN, 7 bước, 4 giá trị lực, 2 ảnh.'],['MES/SPC','Nhận kết quả OK, cập nhật Cpk lực siết.'],['Đèn tháp','Xanh, sẵn sàng sản phẩm kế tiếp.']]}
+];
+const HW=[
+ {k:'H1',n:'Máy chiếu dẫn hướng (Workguide/SOP)',a:'proj',s:['Laser short-throw WUXGA, ≥ 4.000 ANSI lumen, ~20.000 h','Chiếu lên kệ linh kiện, tấm chiếu và trực tiếp lên sản phẩm','Giá treo chỉnh 6 bậc, khung bù méo hình']},
+ {k:'H2',n:'Camera AI nhận diện ×2',a:'cam',s:['CAM-1 5 MP: theo dõi tay toàn vùng thao tác, 30 fps','CAM-2 12 MP: kiểm tra Poka-Yoke và ngoại quan cuối','Ống kính công nghiệp méo thấp, cáp khóa vít']},
+ {k:'H3',n:'Đèn chiếu sáng phụ',a:'led',s:['2 đèn LED bar 600 mm chiếu đều bàn và kệ','Đèn dome/vòng cho vùng kiểm tra cuối','Bộ điều khiển đèn có trigger từ IPC']},
+ {k:'H4',n:'Máy tính IPC & màn hình HMI',a:'hmi',s:['IPC Core i7, 32 GB, GPU NVIDIA RTX 8 GB cho AI','HMI cảm ứng 21,5" + màn hình 2 cho video/live camera','UPS online 1,5 kVA']},
+ {k:'H5',n:'Ngoại vi & Poka-Yoke',a:'peri',s:['Đầu đọc mã 2D công nghiệp có chân đế','2 súng vặn vít điện kiểm soát lực, tín hiệu OK/NG + bộ đếm vít','Balancer treo súng, cảm biến hiện diện trên đồ gá']},
+ {k:'H6',n:'Tủ điện PLC/IO & cảnh báo',a:'plc',s:['PLC mini hoặc Remote I/O Ethernet','Đèn tháp 3 màu có còi, nút dừng khẩn cấp, Start/Reset','Tủ điện 24 VDC, CB, relay an toàn']},
+ {k:'H7',n:'Khung bàn thao tác ESD & đồ gá',a:'jig',s:['Nhôm định hình 1800×900×850 mm, khung trên 2200 mm','Thảm ESD nối đất, kệ 3 tầng 18 hộp linh kiện, tấm chiếu trắng','Đồ gá định vị theo model, chốt và cảm biến']}
+];
+const SW=[
+ {k:'S1',n:'Module chỉ dẫn người lắp ráp',s:['Soạn SOP không cần lập trình: ảnh tham chiếu → vị trí hiển thị → vùng nhận dạng → trình tự','Chiếu nội dung theo từng bước, video thao tác mẫu','Quản lý phiên bản SOP theo model, đăng nhập công nhân, giao diện Việt/Anh/Hàn']},
+ {k:'S2',n:'Hiệu chuẩn máy chiếu & AI Vision',s:['Hiệu chuẩn camera–máy chiếu tự động bằng mẫu chiếu, bù méo','Nhận diện bàn tay và vùng lấy, đếm vít, kiểm tra đủ/đúng/hướng','So sánh mẫu chuẩn, ngưỡng chỉnh theo sản phẩm, chạy GPU tại trạm']},
+ {k:'S3',n:'Truy xuất nguồn gốc & kết nối MES/SPC',s:['Hồ sơ theo serial: người làm, thời gian từng bước, lực siết, ảnh','Dashboard thời gian thực, báo cáo năng suất và lỗi','Kết nối MES của HFS (REST/SQL/OPC UA), biểu đồ SPC, Cp/Cpk']}
+];
+const TORQUE=[0.52,0.51,0.53,0.52];
+
+/* ---------------- renderer ---------------- */
+const host=document.getElementById('viewport');
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const tok=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const FD='"Barlow Condensed","Arial Narrow",sans-serif', FB='"Be Vietnam Pro",system-ui,sans-serif', FM='"JetBrains Mono",ui-monospace,monospace';
+const V3=THREE.Vector3;
+
+let renderer;
+try{
+  renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+}catch(e){ host.insertAdjacentHTML('beforeend','<p style="position:absolute;inset:auto 16px 50% 16px;text-align:center">Trình duyệt này không bật được WebGL nên không hiển thị mô hình 3D.</p>'); return; }
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.outputEncoding=THREE.sRGBEncoding;
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+host.insertBefore(renderer.domElement,host.firstChild);
+renderer.domElement.setAttribute('aria-label','Mô hình 3D trạm PAS');
+renderer.domElement.tabIndex=0;
+
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(36,1,0.05,60);
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true; controls.dampingFactor=0.08;
+controls.maxPolarAngle=Math.PI*0.49; controls.minDistance=0.5; controls.maxDistance=8;
+camera.position.set(2.2,2.35,3.05); controls.target.set(-0.25,1.08,0.0);
+
+(function makeEnv(){
+  const pm=new THREE.PMREMGenerator(renderer); const s=new THREE.Scene();
+  const room=new THREE.Mesh(new THREE.BoxGeometry(14,7,14),new THREE.MeshBasicMaterial({color:0x7d8690,side:THREE.BackSide})); room.position.y=3.5; s.add(room);
+  const lp=(w,h,x,y,z,rx,ry,i)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:new THREE.Color(i,i,i)}));m.position.set(x,y,z);m.rotation.set(rx,ry,0);s.add(m);};
+  lp(8,1.4,0,6.9,0,Math.PI/2,0,3.2); lp(8,1.4,0,6.9,3,Math.PI/2,0,2.4);
+  lp(4,3,-6.9,3,0,0,Math.PI/2,1.5); lp(4,3,6.9,3,2,0,-Math.PI/2,1.1);
+  scene.environment=pm.fromScene(s,0.04).texture;
+})();
+
+scene.add(new THREE.HemisphereLight(0xffffff,0x8090a0,0.5));
+const sun=new THREE.DirectionalLight(0xffffff,0.95); sun.position.set(2.2,5.2,3.4); sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048); Object.assign(sun.shadow.camera,{left:-2.6,right:2.6,top:2.8,bottom:-1.2,near:0.5,far:12}); sun.shadow.bias=-0.0004; sun.shadow.normalBias=0.02;
+scene.add(sun);
+const fill=new THREE.DirectionalLight(0xdfe9ff,0.35); fill.position.set(-3,2.5,1.5); scene.add(fill);
+
+/* ---------------- materials & helpers ---------------- */
+const std=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.55,metalness:.05},o||{}));
+const M={
+ alu:std(0xc5cbd2,{metalness:.6,roughness:.32}), aluDark:std(0x8f979f,{metalness:.55,roughness:.4}),
+ top:std(0xd3d8dd,{roughness:.7}), mat:std(0x2b8a79,{roughness:.88}), shelf:std(0xb2bac3,{metalness:.35,roughness:.48}),
+ bin:std(0x23272c,{roughness:.62}), white:std(0xf0f2f4,{roughness:.42}), panel:std(0xf6f7f8,{roughness:.96}),
+ dark:std(0x1e2227,{roughness:.5}), black:std(0x0d0f12,{roughness:.32}), cab:std(0xd2d5cf,{roughness:.62}), cabDoor:std(0xc8cbc4,{roughness:.62}),
+ driver:std(0x2f6fd6,{roughness:.35}), driverTop:std(0x9aa3ad,{metalness:.5,roughness:.35}), steel:std(0xcfd5db,{metalness:.9,roughness:.22}),
+ jig:std(0x38404a,{metalness:.45,roughness:.45}), pom:std(0xe2862a,{roughness:.5}), prod:std(0xb3bdc8,{metalness:.55,roughness:.38}),
+ bracket:std(0xc58b3c,{metalness:.7,roughness:.3}), screw:std(0x2c3137,{metalness:.8,roughness:.3}), pcb:std(0x1d6a45,{roughness:.5}),
+ yellow:std(0xf0c419,{roughness:.45}), red:std(0xd2261c,{roughness:.4}), greenBtn:std(0x22a35a,{roughness:.4}),
+ paper:std(0xffffff,{roughness:.92}), lens:std(0x0b0d10,{metalness:.2,roughness:.08}),
+ ghost:new THREE.MeshStandardMaterial({color:0x7b92ad,roughness:.6,transparent:true,opacity:.3,depthWrite:false}),
+ glove:new THREE.MeshStandardMaterial({color:0x4f80c8,roughness:.5}),
+ cable:std(0x22262b,{roughness:.6})
+};
+function box(w,h,d,mat,x,y,z,parent,noShadow){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);if(!noShadow){m.castShadow=true;m.receiveShadow=true;}(parent||scene).add(m);return m;}
+function cyl(r,h,mat,x,y,z,parent,seg){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,seg||24),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;(parent||scene).add(m);return m;}
+const P=0.04;
+function prof(a,b){const dx=Math.abs(b[0]-a[0]),dy=Math.abs(b[1]-a[1]),dz=Math.abs(b[2]-a[2]);return box(Math.max(dx,P),Math.max(dy,P),Math.max(dz,P),M.alu,(a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2);}
+const UP=new V3(0,1,0);
+function strut(a,b,mat,t){const A=new V3(...a),B=new V3(...b);const m=new THREE.Mesh(new THREE.BoxGeometry(t||P,A.distanceTo(B),t||P),mat||M.alu);m.position.copy(A).add(B).multiplyScalar(.5);m.quaternion.setFromUnitVectors(UP,B.clone().sub(A).normalize());m.castShadow=true;scene.add(m);return m;}
+function edges(mesh,color,op){const e=new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry,30),new THREE.LineBasicMaterial({color:color||0x000000,transparent:true,opacity:op==null?.25:op}));mesh.add(e);return e;}
+function projMat(c,op){return new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:op==null?.9:op,depthWrite:false,toneMapped:false,polygonOffset:true,polygonOffsetFactor:-2});}
+function mkCanvas(w,h){const cv=document.createElement('canvas');cv.width=w;cv.height=h;const ctx=cv.getContext('2d');const tex=new THREE.CanvasTexture(cv);tex.encoding=THREE.sRGBEncoding;tex.anisotropy=8;return {cv,ctx,tex,w,h,sig:''};}
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
+let seed=7; const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+
+/* ---------------- floor ---------------- */
+const floor=new THREE.Mesh(new THREE.CircleGeometry(7,64),new THREE.MeshStandardMaterial({color:0xdde3e9,roughness:.92}));
+floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+let grid=null;
+function applyTheme(){
+  const bg=new THREE.Color(tok('--vp-bg')||'#e8ecf0');
+  scene.background=bg; scene.fog=new THREE.Fog(bg,7,16);
+  floor.material.color.set(tok('--vp-floor')||'#dde3e9');
+  if(grid){scene.remove(grid);grid.geometry.dispose();}
+  const gc=new THREE.Color(tok('--vp-grid')||'#bfc9d3');
+  grid=new THREE.GridHelper(12,48,gc,gc); grid.position.y=0.001; grid.material.transparent=true; grid.material.opacity=.55; scene.add(grid);
+}
+applyTheme();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+/* ---------------- bench frame ---------------- */
+const TOPY=0.854;
+for(const x of [-0.88,0.88]) for(const z of [-0.43,0.43]){ prof([x,0.04,z],[x,0.83,z]); cyl(0.028,0.04,M.dark,x,0.02,z); }
+for(const y of [0.12,0.80]){ prof([-0.88,y,-0.43],[0.88,y,-0.43]); prof([-0.88,y,0.43],[0.88,y,0.43]); prof([-0.88,y,-0.43],[-0.88,y,0.43]); prof([0.88,y,-0.43],[0.88,y,0.43]); }
+box(1.12,0.015,0.82,M.shelf,-0.30,0.148,0);
+box(1.8,0.03,0.9,M.top,0,0.835,0);
+box(1.76,0.004,0.86,M.mat,0,0.852,0);
+// uprights and canopy
+for(const x of [-0.88,0.88]) prof([x,0.85,-0.43],[x,2.22,-0.43]);
+prof([-0.88,2.2,-0.43],[0.88,2.2,-0.43]); prof([-0.88,2.2,0.18],[0.88,2.2,0.18]);
+prof([-0.88,2.2,-0.43],[-0.88,2.2,0.18]); prof([0.88,2.2,-0.43],[0.88,2.2,0.18]); prof([0,2.2,-0.43],[0,2.2,0.18]);
+prof([-0.88,2.2,-0.10],[0.88,2.2,-0.10]); prof([-0.88,2.2,0.14],[0.88,2.2,0.14]);
+for(const x of [-0.88,0.88]) strut([x,1.80,-0.41],[x,2.18,0.15]);
+prof([-0.88,2.04,-0.43],[0.88,2.04,-0.43]); prof([-0.88,1.44,-0.43],[0.88,1.44,-0.43]);
+// rack posts
+for(const x of [-0.80,0.80]) prof([x,0.86,-0.41],[x,1.44,-0.41]);
+
+/* ---------------- parts rack (3 tiers x 6 bins) ---------------- */
+const TIERS=[{r:'A',y:1.27,z:-0.31},{r:'B',y:1.10,z:-0.26},{r:'C',y:0.93,z:-0.21}];
+const BW=0.235,BG=0.015,BD=0.18,BH=0.10,BX0=-(6*BW+5*BG)/2;
+const bins={};
+function makeBracket(parent){
+  const g=new THREE.Group();
+  const plate=box(0.18,0.006,0.13,M.bracket,0,0.003,0,g); edges(plate,0x5a3a10,.35);
+  box(0.006,0.024,0.13,M.bracket,-0.087,0.015,0,g); box(0.006,0.024,0.13,M.bracket,0.087,0.015,0,g);
+  for(const dx of [-0.07,0.07]) for(const dz of [-0.045,0.045]){ const h=cyl(0.0042,0.0065,M.black,dx,0.003,dz,g,12); h.castShadow=false; }
+  (parent||scene).add(g); return g;
+}
+function labelTex(id){const C=mkCanvas(160,64),c=C.ctx;c.fillStyle='#ffffff';c.fillRect(0,0,160,64);c.fillStyle='#0f1a26';c.font=`700 46px ${FD}`;c.textBaseline='middle';c.fillText(id,12,34);c.fillStyle='#0a5bb0';c.fillRect(110,14,36,36);C.tex.needsUpdate=true;return C.tex;}
+function makeBin(id,x,y,z,row){
+  const g=new THREE.Group(); g.position.set(x,y,z); scene.add(g);
+  const t=0.006;
+  box(BW,t,BD,M.bin,0,t/2,0,g); box(t,BH,BD,M.bin,-BW/2+t/2,BH/2,0,g); box(t,BH,BD,M.bin,BW/2-t/2,BH/2,0,g);
+  box(BW,BH,t,M.bin,0,BH/2,-BD/2+t/2,g); box(BW,0.055,t,M.bin,0,0.0275,BD/2-t/2,g);
+  const lm=new THREE.Mesh(new THREE.PlaneGeometry(0.075,0.03),new THREE.MeshBasicMaterial({map:labelTex(id),toneMapped:false}));
+  lm.position.set(-BW/2+0.05,0.03,BD/2+0.0008); g.add(lm);
+  if(row==='A'){ for(let i=0;i<9;i++){const m=cyl(0.004,0.016,M.steel,(rnd()-.5)*0.16,0.012,(rnd()-.5)*0.11,g,8);m.rotation.set(Math.PI/2*rnd(),rnd()*3,Math.PI/2);} }
+  else if(row==='B'){ for(let i=0;i<3;i++){const b=makeBracket(g);b.position.set(0,0.008+i*0.008,0.0);b.rotation.y=(i-1)*0.06;} }
+  else { for(let i=0;i<3;i++){const m=box(0.13,0.004,0.09,M.pcb,(i-1)*0.02,0.008+i*0.005,(i-1)*0.01,g);m.rotation.y=(i-1)*0.12;} }
+  const hl=new THREE.Mesh(new THREE.PlaneGeometry(BW,0.056),projMat(0x40ff90)); hl.position.set(0,0.028,BD/2+0.0016); hl.visible=false; g.add(hl);
+  const pool=new THREE.Mesh(new THREE.PlaneGeometry(BW-0.02,BD-0.02),projMat(0x40ff90,.55)); pool.rotation.x=-Math.PI/2; pool.position.set(0,0.045,0); pool.visible=false; g.add(pool);
+  const zone=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(BW-0.012,0.13,0.13)),new THREE.LineDashedMaterial({color:0x3aa0ff,dashSize:0.012,gapSize:0.008,toneMapped:false}));
+  zone.computeLineDistances(); zone.position.set(0,BH+0.015,BD/2-0.045); zone.visible=false; g.add(zone);
+  return {id,g,hl,pool,zone,x,y,z};
+}
+TIERS.forEach(T=>{
+  box(1.56,0.012,BD+0.05,M.shelf,0,T.y-0.007,T.z);
+  box(1.56,0.022,0.018,M.aluDark,0,T.y-0.012,T.z+BD/2+0.034);
+  for(const x of [-0.80,0.80]) box(0.03,0.03,(T.z+BD/2+0.03)-(-0.41),M.aluDark,x,T.y-0.02,((T.z+BD/2+0.03)+(-0.41))/2);
+  for(let c=0;c<6;c++){const x=BX0+BW/2+c*(BW+BG);const id=T.r+(c+1);bins[id]=makeBin(id,x,T.y,T.z,T.r);}
+});
+const binOpen=id=>{const b=bins[id];return new V3(b.x,b.y+0.085,b.z+BD/2-0.05);};
+const binFront=id=>{const b=bins[id];return new V3(b.x,b.y+0.16,b.z+BD/2+0.10);};
+
+/* ---------------- projection panel, monitors ---------------- */
+const panelG=new THREE.Group(); panelG.position.set(0,1.585,-0.405); panelG.rotation.x=-0.12; scene.add(panelG);
+box(1.26,0.25,0.012,M.panel,0,0,0,panelG); box(1.28,0.02,0.02,M.aluDark,0,-0.13,-0.004,panelG);
+const texPanel=mkCanvas(1240,240);
+const panelProj=new THREE.Mesh(new THREE.PlaneGeometry(1.24,0.24),new THREE.MeshBasicMaterial({map:texPanel.tex,transparent:true,toneMapped:false,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}));
+panelProj.position.z=0.0065; panelG.add(panelProj);
+
+const hmiG=new THREE.Group(); hmiG.position.set(0,1.885,-0.395); hmiG.rotation.x=0.14; scene.add(hmiG);
+const hb=box(0.56,0.34,0.035,M.black,0,0,0,hmiG); edges(hb,0x000000,.4);
+box(0.10,0.10,0.04,M.dark,0,0,-0.035,hmiG);
+const texHMI=mkCanvas(1040,600);
+const hmiScreen=new THREE.Mesh(new THREE.PlaneGeometry(0.52,0.30),new THREE.MeshBasicMaterial({map:texHMI.tex,toneMapped:false}));
+hmiScreen.position.z=0.0181; hmiG.add(hmiScreen);
+
+prof([-0.88,1.27,-0.43],[-1.04,1.27,-0.43]); box(0.03,0.03,0.30,M.aluDark,-1.04,1.27,-0.29);
+const liveG=new THREE.Group(); liveG.position.set(-1.07,1.30,-0.11); liveG.rotation.y=0.62; liveG.rotation.x=-0.05; scene.add(liveG);
+box(0.50,0.30,0.03,M.black,0,0,0,liveG);
+const texLive=mkCanvas(940,540);
+const liveScreen=new THREE.Mesh(new THREE.PlaneGeometry(0.47,0.27),new THREE.MeshBasicMaterial({map:texLive.tex,toneMapped:false}));
+liveScreen.position.z=0.0155; liveG.add(liveScreen);
+
+/* ---------------- projector, cameras, lights ---------------- */
+const projG=new THREE.Group(); projG.position.set(0,2.115,0.03); scene.add(projG);
+const pb=box(0.34,0.12,0.30,M.white,0,0,0,projG); edges(pb,0x30363d,.3);
+box(0.06,0.03,0.06,M.dark,0,0.075,0,projG);
+cyl(0.045,0.035,M.dark,0,-0.075,0.07,projG);
+const lensGlow=new THREE.Mesh(new THREE.CircleGeometry(0.034,24),new THREE.MeshBasicMaterial({color:0xeaffef,toneMapped:false})); lensGlow.rotation.x=Math.PI/2; lensGlow.position.set(0,-0.0935,0.07); projG.add(lensGlow);
+const LENS=new V3(0,2.02,0.10);
+
+function makeCam(x,y,z,tilt){
+  const g=new THREE.Group(); g.position.set(x,y,z); g.rotation.x=tilt||0; scene.add(g);
+  const b=box(0.056,0.075,0.056,M.dark,0,0,0,g); edges(b,0x000000,.4);
+  cyl(0.022,0.045,M.black,0,-0.06,0,g); const l=cyl(0.016,0.004,M.lens,0,-0.084,0,g); l.castShadow=false;
+  return g;
+}
+box(0.03,0.04,0.03,M.aluDark,-0.30,2.17,0.14);
+const cam1=makeCam(-0.30,2.115,0.14,0.28);
+box(0.02,0.24,0.02,M.aluDark,0.18,2.06,0.14);
+const cam2=makeCam(0.18,1.91,0.14,0);
+const ringMat=new THREE.MeshStandardMaterial({color:0xdfe6ee,emissive:0xffffff,emissiveIntensity:0.15,roughness:.4});
+const ring=new THREE.Mesh(new THREE.TorusGeometry(0.06,0.014,12,40),ringMat); ring.rotation.x=Math.PI/2; ring.position.set(0.18,1.84,0.14); scene.add(ring);
+const inspLight=new THREE.SpotLight(0xffffff,0,1.4,0.55,0.5,1.2); inspLight.position.set(0.18,1.83,0.14); inspLight.target.position.set(0.18,0.9,0.16); scene.add(inspLight,inspLight.target);
+
+function ledBar(x1,x2,z){const len=x2-x1;box(len,0.025,0.05,M.aluDark,(x1+x2)/2,2.165,z);const s=new THREE.Mesh(new THREE.PlaneGeometry(len-0.02,0.03),new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false}));s.rotation.x=Math.PI/2;s.position.set((x1+x2)/2,2.1515,z);scene.add(s);}
+ledBar(-0.70,-0.18,-0.10); ledBar(0.18,0.70,-0.10); ledBar(-0.84,-0.42,0.14);
+
+/* ---------------- tower light ---------------- */
+prof([0.88,1.62,-0.43],[0.97,1.62,-0.43]);
+cyl(0.03,0.03,M.dark,0.97,1.655,-0.43);
+const towerSeg={};
+[['g',0x22b45a,1.695],['a',0xf2a900,1.75],['r',0xe0352b,1.805]].forEach(([k,c,y])=>{
+  const col=new THREE.Color(c);
+  const mat=new THREE.MeshStandardMaterial({color:col.clone().multiplyScalar(.45),emissive:col,emissiveIntensity:0,roughness:.3,transparent:true,opacity:.95});
+  const m=cyl(0.033,0.052,mat,0.97,y,-0.43); m.castShadow=false;
+  towerSeg[k]={mat,col};
+});
+cyl(0.034,0.012,M.dark,0.97,1.837,-0.43);
+
+/* ---------------- screwdrivers + balancers ---------------- */
+function makeDriver(){
+  const g=new THREE.Group();
+  cyl(0.0025,0.04,M.steel,0,0.02,0,g,8); cyl(0.012,0.03,M.driverTop,0,0.055,0,g); cyl(0.021,0.17,M.driver,0,0.155,0,g); cyl(0.023,0.05,M.driverTop,0,0.265,0,g);
+  box(0.03,0.012,0.012,M.dark,0,0.24,0.024,g);
+  scene.add(g); return g;
+}
+const drivers=[]; const DRV_X=[0.72,0.82];
+DRV_X.forEach((x,i)=>{
+  box(0.03,0.04,0.03,M.aluDark,x,2.17,0.18);
+  const drum=cyl(0.045,0.05,M.dark,x,2.115,0.205); drum.rotation.z=Math.PI/2;
+  const rg=new THREE.Mesh(new THREE.TorusGeometry(0.046,0.006,8,24),M.greenBtn); rg.rotation.y=Math.PI/2; rg.position.set(x+0.026,2.115,0.205); scene.add(rg);
+  const d=makeDriver(); const rest=new V3(x,1.22,0.205); d.position.copy(rest);
+  const lg=new THREE.BufferGeometry().setFromPoints([new V3(x,2.07,0.205),new V3(x,1.53,0.205)]);
+  const line=new THREE.Line(lg,new THREE.LineBasicMaterial({color:0x2a2f35})); scene.add(line);
+  drivers.push({g:d,rest,line,top:new V3(x,2.07,0.205)});
+});
+
+/* ---------------- scanner, e-stop, paper ---------------- */
+const scanStand=new V3(-0.56,TOPY,0.37);
+cyl(0.045,0.012,M.dark,scanStand.x,TOPY+0.006,scanStand.z); box(0.02,0.08,0.02,M.dark,scanStand.x,TOPY+0.05,scanStand.z-0.02);
+const scanner=new THREE.Group(); scene.add(scanner);
+box(0.05,0.05,0.09,M.dark,0,0.04,0,scanner); box(0.052,0.012,0.092,M.yellow,0,0.062,0,scanner); box(0.035,0.09,0.035,M.dark,0,-0.02,0.03,scanner);
+const scanWin=new THREE.Mesh(new THREE.PlaneGeometry(0.04,0.03),new THREE.MeshBasicMaterial({color:0x8a1f1f,toneMapped:false})); scanWin.rotation.x=Math.PI/2; scanWin.position.set(0,0.0145,-0.02); scanner.add(scanWin);
+const scanRest=new V3(scanStand.x,TOPY+0.075,scanStand.z);
+const beamGeo=new THREE.BufferGeometry(); beamGeo.setAttribute('position',new THREE.Float32BufferAttribute(new Array(9).fill(0),3));
+const beam=new THREE.Mesh(beamGeo,new THREE.MeshBasicMaterial({color:0xff3b30,transparent:true,opacity:.45,blending:THREE.AdditiveBlending,side:THREE.DoubleSide,depthWrite:false,toneMapped:false})); scene.add(beam); beam.visible=false;
+
+box(0.07,0.055,0.07,M.yellow,0.84,TOPY+0.028,0.39); const es=cyl(0.026,0.022,M.red,0.84,TOPY+0.066,0.39);
+
+const QR=new V3(-0.80,TOPY+0.002,0.19);
+(function paper(){
+  const C=mkCanvas(400,560),c=C.ctx; c.fillStyle='#fff';c.fillRect(0,0,400,560);
+  c.fillStyle='#0f1a26'; c.font=`700 30px ${FD}`; c.fillText('PHIẾU CÔNG ĐOẠN',24,44);
+  c.font=`500 18px ${FM}`; c.fillText('WO-261026-0153',24,76); c.fillText('HX-BR200 · SOP v3.2',24,102);
+  const q=150,ox=24,oy=128,n=21,s=q/n; seed=11;
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){ if(rnd()>.52){c.fillRect(ox+i*s,oy+j*s,s,s);} }
+  const finder=(x,y)=>{c.fillStyle='#0f1a26';c.fillRect(x,y,7*s,7*s);c.fillStyle='#fff';c.fillRect(x+s,y+s,5*s,5*s);c.fillStyle='#0f1a26';c.fillRect(x+2*s,y+2*s,3*s,3*s);};
+  c.fillStyle='#fff'; c.fillRect(ox,oy,8*s,8*s); c.fillRect(ox+q-8*s,oy,8*s,8*s); c.fillRect(ox,oy+q-8*s,8*s,8*s);
+  finder(ox,oy); finder(ox+q-7*s,oy); finder(ox,oy+q-7*s);
+  c.fillStyle='#8a96a3'; for(let k=0;k<9;k++){c.fillRect(24,320+k*24,330-(k%3)*60,8);}
+  C.tex.needsUpdate=true;
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(0.20,0.28),new THREE.MeshStandardMaterial({map:C.tex,roughness:.9}));
+  m.rotation.set(-Math.PI/2,0,0.06); m.position.set(-0.785,TOPY+0.001,0.25); m.receiveShadow=true; scene.add(m);
+})();
+
+/* ---------------- jig + product ---------------- */
+const JIG=new V3(0.18,TOPY,0.16);
+const jigG=new THREE.Group(); jigG.position.copy(JIG); scene.add(jigG);
+box(0.40,0.02,0.30,M.jig,0,0.01,0,jigG);
+for(const sx of [-1,1]) for(const sz of [-1,1]){ box(0.03,0.03,0.05,M.pom,sx*0.165,0.035,sz*0.115,jigG); box(0.05,0.03,0.03,M.pom,sx*0.15,0.035,sz*0.115+ sz*0.01,jigG); }
+cyl(0.006,0.02,M.steel,-0.12,0.03,0.0,jigG,10); cyl(0.006,0.02,M.steel,0.12,0.03,0.0,jigG,10);
+cyl(0.007,0.03,M.dark,0.185,0.035,0.13,jigG,12);
+const sensorLed=new THREE.Mesh(new THREE.SphereGeometry(0.006,12,8),new THREE.MeshBasicMaterial({color:0x3a3f45,toneMapped:false})); sensorLed.position.set(0.185,0.053,0.13); jigG.add(sensorLed);
+const prod=box(0.30,0.07,0.20,M.prod,0,0.055,0,jigG); edges(prod,0x2a323b,.35);
+box(0.26,0.002,0.16,std(0x9aa5b1,{metalness:.5,roughness:.4}),0,0.091,0,jigG);
+const lbl=new THREE.Mesh(new THREE.PlaneGeometry(0.07,0.03),new THREE.MeshBasicMaterial({color:0xffffff,toneMapped:false})); lbl.position.set(-0.08,0.055,0.1006); jigG.add(lbl);
+const PY=TOPY+0.09; // product top
+const bracketPlaced=makeBracket(); bracketPlaced.position.set(JIG.x,PY+0.001,JIG.z);
+const bracketHeld=makeBracket(); bracketHeld.visible=false;
+const SCREWS=[[-0.07,-0.045],[0.07,0.045],[0.07,-0.045],[-0.07,0.045]].map(([dx,dz])=>new V3(JIG.x+dx,PY+0.007,JIG.z+dz));
+const screwHeads=SCREWS.map(p=>{const g=new THREE.Group();g.position.copy(p);scene.add(g);cyl(0.0055,0.004,M.screw,0,0.002,0,g,16);box(0.008,0.0012,0.0015,M.black,0,0.0042,0,g,true);return g;});
+
+/* ---------------- under-bench: IPC, UPS, controllers, cabinet ---------------- */
+const ipc=box(0.40,0.38,0.20,M.dark,-0.55,0.345,-0.08); edges(ipc,0x000000,.45);
+for(let k=0;k<6;k++) box(0.30,0.008,0.002,M.black,-0.55,0.25+k*0.035,0.0215,null,true);
+const ipcLed=new THREE.Mesh(new THREE.CircleGeometry(0.006,12),new THREE.MeshBasicMaterial({color:0x2fe07a,toneMapped:false})); ipcLed.position.set(-0.40,0.50,0.0205); scene.add(ipcLed);
+box(0.16,0.25,0.40,M.dark,-0.22,0.28,-0.10);
+for(let k=0;k<2;k++){ const b=box(0.24,0.075,0.18,std(0x3a4048),0.06,0.195+k*0.08,-0.05); const d=new THREE.Mesh(new THREE.PlaneGeometry(0.06,0.025),new THREE.MeshBasicMaterial({color:0x1fd36a,toneMapped:false})); d.position.set(0.0,0.195+k*0.08,0.0405); scene.add(d); }
+const cab=box(0.56,0.70,0.68,M.cab,0.575,0.43,-0.05); edges(cab,0x6b7068,.35);
+box(0.52,0.66,0.004,M.cabDoor,0.575,0.43,0.292);
+box(0.016,0.10,0.02,M.dark,0.80,0.47,0.30);
+const cabLbl=new THREE.Mesh(new THREE.PlaneGeometry(0.14,0.04),new THREE.MeshBasicMaterial({map:(()=>{const C=mkCanvas(280,80),c=C.ctx;c.fillStyle='#fff';c.fillRect(0,0,280,80);c.fillStyle='#0f1a26';c.font=`700 40px ${FD}`;c.fillText('PLC / IO',20,54);C.tex.needsUpdate=true;return C.tex;})(),toneMapped:false}));
+cabLbl.position.set(0.50,0.70,0.295); scene.add(cabLbl);
+cyl(0.014,0.012,M.greenBtn,0.44,0.62,0.30).rotation.x=Math.PI/2; cyl(0.014,0.012,std(0xf2a900),0.50,0.62,0.30).rotation.x=Math.PI/2; cyl(0.014,0.012,M.red,0.56,0.62,0.30).rotation.x=Math.PI/2;
+
+/* MES/SPC server (customer side) */
+const srv=box(0.48,1.15,0.55,M.dark,-1.72,0.575,-0.10); edges(srv,0x000000,.5);
+for(let k=0;k<8;k++){const l=new THREE.Mesh(new THREE.PlaneGeometry(0.38,0.02),new THREE.MeshBasicMaterial({color:k%3?0x2a3540:0x2c7be5,toneMapped:false}));l.position.set(-1.72,0.25+k*0.11,0.176);scene.add(l);}
+const cablePath=new THREE.CatmullRomCurve3([new V3(-0.55,0.30,-0.18),new V3(-0.62,0.03,-0.26),new V3(-1.05,0.02,-0.24),new V3(-1.40,0.03,-0.14),new V3(-1.475,0.24,-0.10)]);
+const cableMesh=new THREE.Mesh(new THREE.TubeGeometry(cablePath,40,0.006,6,false),M.cable); scene.add(cableMesh);
+const packets=[0,1,2,3].map(()=>{const m=new THREE.Mesh(new THREE.SphereGeometry(0.018,14,10),new THREE.MeshBasicMaterial({color:0x2f8cff,toneMapped:false}));m.visible=false;scene.add(m);return m;});
+
+/* ---------------- projection surfaces ---------------- */
+const texTable=mkCanvas(1040,640);
+const tableProj=new THREE.Mesh(new THREE.PlaneGeometry(0.52,0.32),new THREE.MeshBasicMaterial({map:texTable.tex,transparent:true,depthWrite:false,toneMapped:false,polygonOffset:true,polygonOffsetFactor:-2}));
+tableProj.rotation.x=-Math.PI/2; tableProj.position.set(-0.40,TOPY+0.0012,0.11); scene.add(tableProj);
+const texProd=mkCanvas(680,480);
+const prodProj=new THREE.Mesh(new THREE.PlaneGeometry(0.34,0.24),new THREE.MeshBasicMaterial({map:texProd.tex,transparent:true,depthWrite:false,toneMapped:false,polygonOffset:true,polygonOffsetFactor:-2}));
+prodProj.rotation.x=-Math.PI/2; prodProj.position.set(JIG.x,PY+0.0095,JIG.z); scene.add(prodProj);
+
+function frustum(apex,corners,color,op){
+  const g=new THREE.Group(); const pos=[];
+  for(let k=0;k<4;k++){const a=corners[k],b=corners[(k+1)%4];pos.push(...apex.toArray(),...a.toArray(),...b.toArray());}
+  const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  g.add(new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color,transparent:true,opacity:op,side:THREE.DoubleSide,depthWrite:false,toneMapped:false})));
+  const lp=[]; corners.forEach(c=>lp.push(...apex.toArray(),...c.toArray())); for(let k=0;k<4;k++) lp.push(...corners[k].toArray(),...corners[(k+1)%4].toArray());
+  const lg=new THREE.BufferGeometry(); lg.setAttribute('position',new THREE.Float32BufferAttribute(lp,3));
+  g.add(new THREE.LineSegments(lg,new THREE.LineBasicMaterial({color,transparent:true,opacity:.55,toneMapped:false})));
+  scene.add(g); return g;
+}
+const projFrustum=frustum(LENS,[new V3(-0.80,TOPY,0.43),new V3(0.80,TOPY,0.43),new V3(0.80,1.72,-0.40),new V3(-0.80,1.72,-0.40)],0x2fd47a,.045);
+const cam1Fr=frustum(new V3(-0.30,2.04,0.16),[new V3(-0.86,TOPY,0.44),new V3(0.86,TOPY,0.44),new V3(0.86,1.42,-0.36),new V3(-0.86,1.42,-0.36)],0x3a8cff,.03);
+const cam2Fr=frustum(new V3(0.18,1.825,0.14),[new V3(0.0,PY,0.04),new V3(0.36,PY,0.04),new V3(0.36,PY,0.28),new V3(0.0,PY,0.28)],0x3a8cff,.07);
+
+/* glow sprites */
+const glowTex=(()=>{const C=mkCanvas(128,128),c=C.ctx;const g=c.createRadialGradient(64,64,0,64,64,64);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.35,'rgba(255,255,255,.35)');g.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=g;c.fillRect(0,0,128,128);C.tex.needsUpdate=true;return C.tex;})();
+function glow(color,scale,pos){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex,color,blending:THREE.AdditiveBlending,transparent:true,depthWrite:false,toneMapped:false}));s.scale.setScalar(scale);s.position.copy(pos);scene.add(s);return s;}
+towerSeg.g.glow=glow(0x22ff70,0.22,new V3(0.97,1.695,-0.39)); towerSeg.a.glow=glow(0xffb000,0.22,new V3(0.97,1.75,-0.39)); towerSeg.r.glow=glow(0xff3020,0.24,new V3(0.97,1.805,-0.39));
+const lensSprite=glow(0xd8ffe6,0.12,new V3(0,2.02,0.10));
+
+/* ---------------- operator ghost ---------------- */
+const op={root:new THREE.Group(),upper:new THREE.Group()};
+op.root.position.set(-0.02,0,0.84); scene.add(op.root);
+for(const sx of [-1,1]){ const l=new THREE.Mesh(new THREE.CapsuleGeometry(0.065,0.70,6,12),M.ghost); l.position.set(sx*0.09,0.44,0); op.root.add(l); }
+op.upper.position.set(0,0.95,0); op.root.add(op.upper);
+const torso=new THREE.Mesh(new THREE.CapsuleGeometry(0.15,0.36,6,16),M.ghost); torso.scale.z=0.7; torso.position.set(0,0.24,0); op.upper.add(torso);
+const head=new THREE.Mesh(new THREE.SphereGeometry(0.10,20,14),M.ghost); head.position.set(0,0.69,0); op.upper.add(head);
+const shoulderL=new V3(-0.19,0.48,0), shoulderR=new V3(0.19,0.48,0);
+const cylGeo=new THREE.CylinderGeometry(1,1,1,12);
+function seg(r){const m=new THREE.Mesh(cylGeo,M.ghost);m.userData.r=r;scene.add(m);return m;}
+function joint(r){const m=new THREE.Mesh(new THREE.SphereGeometry(r,12,8),M.ghost);scene.add(m);return m;}
+function handMesh(){const g=new THREE.Group();const p=new THREE.Mesh(new THREE.BoxGeometry(0.075,0.095,0.026),M.glove);p.castShadow=true;g.add(p);const th=new THREE.Mesh(new THREE.BoxGeometry(0.02,0.05,0.02),M.glove);th.position.set(0.04,0.0,0.0);th.rotation.z=-0.5;g.add(th);scene.add(g);return g;}
+const arms={L:{up:seg(0.042),fo:seg(0.036),el:joint(0.042),sh:joint(0.05),hand:handMesh(),pole:new V3(-0.6,-1,0.25)},R:{up:seg(0.042),fo:seg(0.036),el:joint(0.042),sh:joint(0.05),hand:handMesh(),pole:new V3(0.6,-1,0.25)}};
+const A_UP=0.34,A_FO=0.33;
+function setSeg(m,A,B){const d=B.clone().sub(A);const len=d.length();m.position.copy(A).add(B).multiplyScalar(.5);m.scale.set(m.userData.r,Math.max(len,0.001),m.userData.r);m.quaternion.setFromUnitVectors(UP,d.normalize());}
+const tmp=new V3();
+function poseOperator(Lt,Rt){
+  const base=op.root.position;
+  const sL0=base.clone().add(new V3(shoulderL.x,0.95+shoulderL.y,0)), sR0=base.clone().add(new V3(shoulderR.x,0.95+shoulderR.y,0));
+  const need=Math.max(Lt.distanceTo(sL0),Rt.distanceTo(sR0))-0.60;
+  const lean=Math.asin(Math.min(Math.max(need,0)/0.48,0.82));
+  op.upper.rotation.x=-lean;
+  op.root.updateMatrixWorld(true);
+  for(const [k,T] of [['L',Lt],['R',Rt]]){
+    const a=arms[k]; const S=op.upper.localToWorld((k==='L'?shoulderL:shoulderR).clone());
+    let d=T.clone().sub(S); let dist=d.length(); const u=d.clone().normalize();
+    const dc=Math.min(Math.max(dist,0.08),A_UP+A_FO-0.002);
+    const cosA=(A_UP*A_UP+dc*dc-A_FO*A_FO)/(2*A_UP*dc); const sinA=Math.sqrt(Math.max(0,1-cosA*cosA));
+    const p=a.pole.clone().normalize(); p.sub(u.clone().multiplyScalar(p.dot(u))).normalize();
+    const E=S.clone().add(u.clone().multiplyScalar(A_UP*cosA)).add(p.multiplyScalar(A_UP*sinA));
+    const W=S.clone().add(u.clone().multiplyScalar(dc));
+    setSeg(a.up,S,E); setSeg(a.fo,E,W); a.el.position.copy(E); a.sh.position.copy(S);
+    a.hand.position.copy(W); a.hand.quaternion.setFromUnitVectors(UP,W.clone().sub(E).normalize());
+    a.W=W;
+  }
+}
+
+/* ---------------- sim state ---------------- */
+const REST={L:new V3(-0.22,0.92,0.36),R:new V3(0.22,0.92,0.37)};
+const HOLD=new V3(-0.06,0.99,0.30);
+const sim={step:1,t:0.45,playing:!reduceMotion,speed:1,err:false,cycles:0,blocked:0,clock:10*3600+35*60+6,errCounted:false};
+const smooth=x=>x*x*(3-2*x);
+function path(keys,t){ if(t<=keys[0][0]) return keys[0][1].clone();
+  for(let k=0;k<keys.length-1;k++){const [ta,a]=keys[k],[tb,b]=keys[k+1]; if(t<=tb){const u=tb>ta?smooth((t-ta)/(tb-ta)):1; return a.clone().lerp(b,u);}}
+  return keys[keys.length-1][1].clone(); }
+const stepDur=i=>(i===2&&sim.err)?STEPS[2].durErr:STEPS[i].dur;
+const scanGrab=scanRest.clone().add(new V3(0,0.03,0.0));
+const overQR=new V3(QR.x+0.02,TOPY+0.19,QR.z+0.01);
+const above=p=>p.clone().add(new V3(0,0.06,0));
+const SCREW_WIN=[0.08,0.27,0.46,0.65];
+
+function screwPhase(t){ // returns {done, active}
+  let done=0,active=-1;
+  SCREW_WIN.forEach((a,k)=>{ if(t>=a+0.15) done=k+1; else if(t>=a && active<0) active=k; });
+  return {done,active};
+}
+function driverTip(t){
+  const D0=drivers[0].rest; const keys=[[0,D0],[0.08,D0]];
+  SCREW_WIN.forEach((a,k)=>{const s=SCREWS[k];keys.push([a+0.06,above(s)],[a+0.08,s],[a+0.15,s],[a+0.18,above(s)]);});
+  keys.push([0.92,D0],[1,D0]); return path(keys,t);
+}
+function serial(){return 'HX26102601'+String(53+sim.cycles).padStart(2,'0');}
+
+function computeState(){
+  const i=sim.step,t=sim.t,err=sim.err;
+  const st={i,t,L:REST.L.clone(),R:REST.R.clone(),scanOn:false,beam:false,tower:'g',bin:{},zone:{},partHeld:false,
+    partPlaced:i>3||(i===3&&t>=0.6),screwsDone:i>4?4:0,screwActive:-1,inspect:false,inspected:i>5||(i===5&&t>=0.62),
+    woLoaded:!(i===0&&t<0.62),error:false,detect:null,driverTip:null,packets:false,scanY:0};
+  if(i===0){
+    st.L=path([[0,REST.L],[0.16,scanGrab],[0.22,scanGrab],[0.42,overQR],[0.70,overQR],[0.84,scanGrab],[0.90,scanGrab],[1,REST.L]],t);
+    st.scanOn=t>=0.2&&t<=0.86; st.beam=t>=0.46&&t<=0.66; st.tower=t<0.62?'a':'g';
+    st.partPlaced=false; st.screwsDone=0; st.inspected=false;
+  } else if(i===1){
+    st.bin.B2='target'; st.zone.B2='idle';
+  } else if(i===2){
+    if(!err){
+      st.L=path([[0,REST.L],[0.25,binFront('B2')],[0.38,binOpen('B2')],[0.55,binOpen('B2')],[0.70,binFront('B2')],[1,HOLD]],t);
+      st.bin.B2=t<0.40?'target':'ok'; st.zone.B2=t<0.40?'idle':'ok'; st.partHeld=t>=0.5;
+      if(t>=0.30&&t<0.6) st.detect={id:'B2',ok:t>=0.40,conf:0.97};
+    } else {
+      st.L=path([[0,REST.L],[0.14,binFront('B3')],[0.22,binOpen('B3')],[0.32,binOpen('B3')],[0.42,binFront('B3')],[0.52,binFront('B2')],[0.60,binOpen('B2')],[0.72,binOpen('B2')],[0.84,binFront('B2')],[1,HOLD]],t);
+      st.error=t>=0.25&&t<0.62; st.tower=st.error?'r':'g';
+      st.bin.B2=t<0.62?'target':'ok'; st.zone.B2=t<0.62?'idle':'ok';
+      if(st.error){st.bin.B3='error';st.zone.B3='error';}
+      st.partHeld=t>=0.68;
+      if(t>=0.18&&t<0.42) st.detect={id:'B3',ok:false,conf:0.96}; else if(t>=0.55&&t<0.75) st.detect={id:'B2',ok:t>=0.62,conf:0.98};
+    }
+  } else if(i===3){
+    st.L=path([[0,HOLD],[0.35,new V3(JIG.x-0.02,PY+0.09,JIG.z+0.02)],[0.48,new V3(JIG.x,PY+0.045,JIG.z)],[0.62,new V3(JIG.x,PY+0.045,JIG.z)],[0.78,new V3(JIG.x-0.04,PY+0.12,JIG.z+0.08)],[1,REST.L]],t);
+    st.partHeld=t<0.6;
+  } else if(i===4){
+    const ph=screwPhase(t); st.screwsDone=ph.done; st.screwActive=ph.active;
+    st.driverTip=driverTip(t);
+    const grip=st.driverTip.clone().add(new V3(0.0,0.16,0.04));
+    const g0=drivers[0].rest.clone().add(new V3(0,0.16,0.04));
+    st.R=path([[0,REST.R],[0.08,g0]],t); if(t>=0.08&&t<0.92) st.R=grip; if(t>=0.92) st.R=path([[0.92,g0],[1,REST.R]],t);
+  } else if(i===5){
+    st.inspect=t<0.62; st.scanY=Math.min(1,Math.max(0,(t-0.08)/0.5));
+  } else if(i===6){
+    st.packets=t>=0.05&&t<=0.9;
+  }
+  return st;
+}
+
+/* ---------------- drawing: projected content & screens ---------------- */
+const PW='#ffffff',PG='#22f27e',PR='#ff4a3d',PA='#ffc23d';
+function wrapText(c,txt,x,y,maxW,lh){const words=txt.split(' ');let line='';for(const w of words){const test=line?line+' '+w:w;if(c.measureText(test).width>maxW&&line){c.fillText(line,x,y);line=w;y+=lh;}else line=test;}if(line)c.fillText(line,x,y);return y+lh;}
+function arrow(c,x1,y1,x2,y2,w,col){const a=Math.atan2(y2-y1,x2-x1);c.strokeStyle=col;c.fillStyle=col;c.lineWidth=w;c.lineCap='round';c.beginPath();c.moveTo(x1,y1);c.lineTo(x2-Math.cos(a)*w*2,y2-Math.sin(a)*w*2);c.stroke();c.beginPath();c.moveTo(x2,y2);c.lineTo(x2-Math.cos(a-0.5)*w*4,y2-Math.sin(a-0.5)*w*4);c.lineTo(x2-Math.cos(a+0.5)*w*4,y2-Math.sin(a+0.5)*w*4);c.closePath();c.fill();}
+
+function tableContent(st){
+  const i=st.i;
+  if(i===0) return st.woLoaded?{tone:'ok',head:'ĐÃ TẢI SOP v3.2',lines:['Model HX-BR200 · Lệnh WO-261026-0153','7 bước · Lực siết 0,50 N·m ±10%'],n:1}
+                             :{tone:'w',head:'QUÉT MÃ LỆNH SẢN XUẤT',lines:['Đưa mã 2D trên phiếu công đoạn vào vùng quét'],n:1,arrowLeft:true};
+  if(i===1) return {tone:'w',head:'BƯỚC 2/7 · LẤY LINH KIỆN',lines:['1 × Khung đỡ BR-02','tại ô B2 (đang sáng)'],n:2,arrowUp:true};
+  if(i===2){ if(st.error) return {tone:'err',head:'SAI Ô LINH KIỆN!',lines:['Rút tay khỏi ô B3','Lấy khung đỡ tại ô B2'],n:3};
+             return {tone:st.bin.B2==='ok'?'ok':'w',head:st.bin.B2==='ok'?'ĐÃ LẤY ĐÚNG ✓':'BƯỚC 3/7 · LẤY ĐÚNG Ô',lines:['Camera AI đang xác nhận thao tác tay','Ô B2 · Khung đỡ BR-02'],n:3}; }
+  if(i===3) return st.partPlaced?{tone:'ok',head:'ĐÚNG VỊ TRÍ ✓',lines:['Cảm biến đồ gá S1: ON','Chuẩn bị siết vít'],n:4}:{tone:'w',head:'BƯỚC 4/7 · LẮP KHUNG ĐỠ',lines:['Đặt BR-02 vào viền sáng trên sản phẩm','Mép gấp hướng sang hai bên'],n:4,arrowRight:true};
+  if(i===4) return {tone:st.screwsDone===4?'ok':'w',head:'BƯỚC 5/7 · SIẾT 4 VÍT M3',lines:['Theo thứ tự 1 → 2 → 3 → 4 · 0,50 N·m',`Đã siết ${st.screwsDone}/4 vít OK`],n:5,arrowRight:true};
+  if(i===5) return st.inspected?{tone:'ok',head:'AI: ĐẠT 98,7%',lines:['Đủ 4 vít · đúng chi tiết · đúng hướng','Ngưỡng ≥ 95%'],n:6}:{tone:'w',head:'BƯỚC 6/7 · AI KIỂM TRA',lines:['Giữ tay ngoài vùng chụp','Camera 12 MP đang so mẫu chuẩn'],n:6};
+  return {tone:'ok',head:'HOÀN THÀNH ✓',lines:['Đã lưu hồ sơ SN '+serial(),'Gửi MES/SPC · lấy sản phẩm ra'],n:7};
+}
+function drawTable(st){
+  const T=texTable,c=T.ctx,ct=tableContent(st); const pulse=st.error?(Math.floor(performance.now()/250)%2):0;
+  const sig=JSON.stringify(ct)+pulse; if(sig===T.sig) return; T.sig=sig;
+  c.clearRect(0,0,T.w,T.h);
+  const err=ct.tone==='err', ok=ct.tone==='ok';
+  const bg=err?(pulse?'rgba(255,214,206,.96)':'rgba(255,236,230,.93)'):ok?'rgba(222,255,234,.93)':'rgba(240,255,246,.92)';
+  const ink='#0b2a1e', head=err?'#b3150c':ok?'#08773b':'#0a4f8f', acc=err?'#d0261b':'#0b8a46';
+  c.fillStyle=bg; rr(c,6,6,T.w-12,T.h-12,28); c.fill();
+  c.strokeStyle=acc;c.lineWidth=10;rr(c,14,14,T.w-28,T.h-28,24);c.stroke();
+  c.fillStyle=head;c.font=`700 80px ${FD}`;c.textBaseline='alphabetic';c.fillText(ct.head,46,108);
+  c.fillStyle=acc;c.fillRect(46,128,T.w-92,5);
+  c.fillStyle=ink;c.font=`600 44px ${FB}`;let y=208;for(const l of ct.lines){y=wrapText(c,l,46,y,T.w-150,58);y+=6;}
+  for(let k=0;k<7;k++){c.beginPath();c.arc(60+k*48,T.h-58,14,0,Math.PI*2);if(k<ct.n){c.fillStyle=k===ct.n-1?acc:'#5d7a6c';c.fill();}else{c.strokeStyle='#5d7a6c';c.lineWidth=3;c.stroke();}}
+  c.font=`600 30px ${FM}`;c.fillStyle=ink;c.fillText(`${ct.n}/7`,60+7*48+8,T.h-48);
+  if(ct.arrowLeft) arrow(c,T.w-120,T.h-60,T.w-330,T.h-60,12,acc);
+  if(ct.arrowUp) arrow(c,T.w-90,T.h-70,T.w-90,170,12,acc);
+  if(ct.arrowRight) arrow(c,T.w-250,T.h-58,T.w-50,T.h-58,12,acc);
+  T.tex.needsUpdate=true;
+}
+function drawProd(st){
+  const T=texProd,c=T.ctx,i=st.i; const ph=Math.floor(performance.now()/260)%2;
+  let mode='none'; if(i===3) mode=st.partPlaced?'placed':'place'; else if(i===4) mode='screw'; else if(i===5) mode='inspect'; else if(i===6) mode='done';
+  const sig=[mode,st.screwsDone,st.screwActive,mode==='screw'||mode==='place'?ph:0,mode==='inspect'?Math.round(st.scanY*40):0,st.inspected].join('|');
+  if(sig===T.sig) return; T.sig=sig; c.clearRect(0,0,T.w,T.h);
+  const cx=340,cy=240,S=2000; c.lineCap='round'; c.shadowColor='rgba(0,30,10,.65)'; c.shadowBlur=10;
+  if(mode==='place'){
+    c.setLineDash([22,14]);c.strokeStyle=ph?PG:PW;c.lineWidth=8;c.strokeRect(cx-180,cy-130,360,260);c.setLineDash([]);
+    arrow(c,cx,cy+230,cx,cy+60,10,PG); c.fillStyle=PW;c.font=`700 44px ${FD}`;c.fillText('BR-02',cx-50,cy+8);
+  } else if(mode==='placed'){
+    c.strokeStyle=PG;c.lineWidth=9;c.strokeRect(cx-180,cy-130,360,260); c.fillStyle=PG;c.font=`700 64px ${FD}`;c.fillText('✓',cx-18,cy+22);
+  } else if(mode==='screw'){
+    c.strokeStyle=PG;c.globalAlpha=.6;c.lineWidth=4;c.strokeRect(cx-180,cy-130,360,260);c.globalAlpha=1;
+    SCREWS.forEach((p,k)=>{const x=cx+(p.x-JIG.x)*S,y=cy+(p.z-JIG.z)*S;
+      if(k<st.screwsDone){c.fillStyle=PG;c.beginPath();c.arc(x,y,24,0,Math.PI*2);c.fill();c.strokeStyle='#08361b';c.lineWidth=6;c.beginPath();c.moveTo(x-11,y);c.lineTo(x-3,y+9);c.lineTo(x+12,y-9);c.stroke();}
+      else if(k===st.screwActive){c.strokeStyle=ph?PW:PG;c.lineWidth=9;c.beginPath();c.arc(x,y,ph?38:32,0,Math.PI*2);c.stroke();c.fillStyle=PW;c.font=`700 40px ${FD}`;c.fillText(String(k+1),x-9,y-46);}
+      else {c.strokeStyle=PW;c.lineWidth=5;c.beginPath();c.arc(x,y,22,0,Math.PI*2);c.stroke();c.fillStyle=PW;c.font=`700 34px ${FD}`;c.fillText(String(k+1),x-8,y-32);}
+    });
+  } else if(mode==='inspect'||mode==='done'){
+    const col=PG; c.strokeStyle=col;c.lineWidth=8;const L=60,x0=40,y0=40,x1=640,y1=440;
+    [[x0,y0,1,1],[x1,y0,-1,1],[x0,y1,1,-1],[x1,y1,-1,-1]].forEach(([x,y,sx,sy])=>{c.beginPath();c.moveTo(x,y+sy*L);c.lineTo(x,y);c.lineTo(x+sx*L,y);c.stroke();});
+    if(mode==='inspect'&&!st.inspected){const yy=y0+(y1-y0)*st.scanY;c.globalAlpha=.85;c.fillStyle=PW;c.fillRect(x0,yy-3,x1-x0,6);c.globalAlpha=1;}
+    if(st.inspected){c.fillStyle=col;c.font=`700 60px ${FD}`;c.fillText(mode==='done'?'OK':'98,7%',x1-(mode==='done'?96:190),y0+70);}
+  }
+  c.shadowBlur=0; T.tex.needsUpdate=true;
+}
+function binPx(id){const b=bins[id];return (b.x+0.62)/1.24*1240;}
+function drawPanel(st){
+  const T=texPanel,c=T.ctx,i=st.i; const ph=st.error?Math.floor(performance.now()/250)%2:0;
+  const sig=[i,st.woLoaded,st.error,ph,st.bin.B2,st.inspected,st.screwsDone,sim.cycles].join('|'); if(sig===T.sig) return; T.sig=sig;
+  c.clearRect(0,0,T.w,T.h);
+  const BL='#0a5bb0',GR='#0c9a50',RD='#d3271d',INK='#13202d';
+  c.fillStyle='rgba(10,91,176,.08)';c.fillRect(0,0,T.w,T.h);
+  c.fillStyle=BL;c.fillRect(0,0,T.w,10);
+  c.font=`700 34px ${FD}`;c.fillStyle=BL;c.fillText('PAS · TRẠM 01',24,58);
+  c.font=`600 22px ${FM}`;c.fillStyle=INK;c.fillText(st.woLoaded?'WO-261026-0153 · HX-BR200 · SN '+serial():'Chờ lệnh sản xuất',24,92);
+  let msg='',col=INK;
+  if(i===0) msg=st.woLoaded?'Đã tải SOP v3.2 · 7 bước':'Quét mã 2D trên phiếu công đoạn';
+  if(i===1||i===2){
+    const tx=binPx('B2'); const okB2=st.bin.B2==='ok';
+    c.fillStyle=okB2?GR:GR; arrow(c,tx,110,tx,228,16,okB2?GR:GR);
+    c.font=`700 40px ${FD}`;c.fillStyle=GR;c.fillText(okB2?'B2 ✓':'B2',tx+34,200);
+    if(st.error){ const ex=binPx('B3'); arrow(c,ex,110,ex,228,16,ph?RD:'#ff8a80'); c.fillStyle=RD;c.font=`700 40px ${FD}`;c.fillText('B3 ✕ SAI',ex+34,200); }
+    msg=st.error?'SAI Ô! Lấy khung đỡ BR-02 tại ô B2':(okB2?'Đã lấy đúng · chuyển sang lắp':'LẤY 1 × KHUNG ĐỠ BR-02 · Ô B2'); col=st.error?RD:GR;
+  }
+  if(i===3) {msg='Bước 4/7 · Đặt khung đỡ vào viền sáng trên sản phẩm';col=BL;}
+  if(i===4) {msg=`Bước 5/7 · Siết vít 1→2→3→4 · ${st.screwsDone}/4 OK`;col=BL;}
+  if(i===5) {msg=st.inspected?'AI kiểm tra: ĐẠT 98,7%':'Bước 6/7 · AI đang kiểm tra, giữ tay ngoài vùng chụp';col=st.inspected?GR:BL;}
+  if(i===6) {msg='HOÀN THÀNH · Hồ sơ đã gửi MES/SPC';col=GR;}
+  c.font=`700 46px ${FD}`;c.fillStyle=col; c.textAlign='right'; c.fillText(msg,T.w-28,72); c.textAlign='left';
+  T.tex.needsUpdate=true;
+}
+function fmtClock(sec){sec=Math.floor(sec);const h=Math.floor(sec/3600)%24,m=Math.floor(sec/60)%60,s=sec%60;return [h,m,s].map(v=>String(v).padStart(2,'0')).join(':');}
+function drawHMI(st){
+  const T=texHMI,c=T.ctx,i=st.i; const clk=fmtClock(sim.clock+STEPS[i].real*sim.t);
+  const sig=[i,st.woLoaded,st.error,st.bin.B2,st.partPlaced,st.screwsDone,st.inspected,sim.cycles,clk].join('|'); if(sig===T.sig) return; T.sig=sig;
+  const W=T.w,H=T.h; c.fillStyle='#0d1824';c.fillRect(0,0,W,H);
+  c.fillStyle=st.error?'#b3261e':'#0a5bb0';c.fillRect(0,0,W,64);
+  c.fillStyle='#fff';c.font=`700 40px ${FD}`;c.fillText('PAS',22,46);c.font=`600 25px ${FD}`;c.fillText('PROJECTION ASSEMBLY SYSTEM · TRẠM 01',96,44);
+  c.textAlign='right';c.font=`500 22px ${FM}`;c.fillText(clk,W-22,42);c.textAlign='left';
+  c.fillStyle='#16283a';c.fillRect(0,64,W,44);c.fillStyle='#9fb6cc';c.font=`500 19px ${FM}`;
+  c.fillText(st.woLoaded?`WO-261026-0153   HX-BR200   SN ${serial()}   NV-0217`:'Chờ quét lệnh sản xuất…',22,93);
+  STEPS.forEach((s,k)=>{const y=128+k*56;const done=k<i||(k===i&&sim.t>0.98);const cur=k===i;
+    c.fillStyle=cur?(st.error?'#3a1513':'#123a63'):'#122130';rr(c,16,y,420,48,8);c.fill();
+    c.beginPath();c.arc(44,y+24,15,0,Math.PI*2);c.fillStyle=done?'#1fae5b':cur?(st.error?'#e0352b':'#2f8cff'):'#2a3b4d';c.fill();
+    c.fillStyle='#fff';c.font=`700 19px ${FD}`;c.textAlign='center';c.fillText(done?'✓':String(k+1),44,y+31);c.textAlign='left';
+    c.fillStyle=cur?'#fff':'#b8c7d6';c.font=`${cur?600:500} 20px ${FB}`;c.fillText(s.name,70,y+31);});
+  const px=458,pw=W-px-18; c.fillStyle='#122130';rr(c,px,120,pw,250,10);c.fill();
+  const ct=tableContent(st); c.fillStyle=ct.tone==='err'?'#ff6b5e':ct.tone==='ok'?'#4be08c':'#ffffff';c.font=`700 36px ${FD}`;c.fillText(ct.head,px+20,170);
+  c.fillStyle='#c9d6e3';c.font=`500 22px ${FB}`;let y=214;ct.lines.forEach(l=>{y=wrapText(c,l,px+20,y,pw-40,32);});
+  // part image tile
+  c.fillStyle='#1b2f45';rr(c,px+20,270,140,84,8);c.fill();c.fillStyle='#c58b3c';c.fillRect(px+45,300,90,30);c.fillStyle='#8a5d22';c.fillRect(px+45,296,6,38);c.fillRect(px+129,296,6,38);
+  c.fillStyle='#8aa2ba';c.font=`500 17px ${FM}`;c.fillText('BR-02 · SL 1 · ô B2',px+176,318);c.fillText('SOP v3.2 · bước '+(i+1)+'/7',px+176,344);
+  // torque table
+  c.fillStyle='#122130';rr(c,px,384,pw,196,10);c.fill();c.fillStyle='#8aa2ba';c.font=`600 18px ${FB}`;c.fillText('Lực siết (N·m) · mục tiêu 0,50 ±0,05',px+20,416);
+  for(let k=0;k<4;k++){const y=448+k*32;const d=k<st.screwsDone;c.fillStyle='#c9d6e3';c.font=`500 20px ${FM}`;c.fillText('Vít '+(k+1),px+20,y);
+    c.fillText(d?TORQUE[k].toFixed(2).replace('.',','):'—',px+120,y);c.fillStyle=d?'#4be08c':'#4c5f73';c.fillText(d?'OK':'chờ',px+210,y);}
+  c.fillStyle=st.inspected?'#4be08c':'#4c5f73';c.font=`700 30px ${FD}`;c.fillText(st.inspected?'AI: ĐẠT 98,7%':'AI: chờ',px+300,460);
+  c.fillStyle='#8aa2ba';c.font=`500 18px ${FB}`;c.fillText('Sản lượng ca: '+sim.cycles,px+300,500);c.fillText('Lỗi đã chặn: '+sim.blocked,px+300,530);
+  T.tex.needsUpdate=true;
+}
+let liveLast=0;
+function drawLive(st,now){
+  if(now-liveLast<66) return; liveLast=now;
+  const T=texLive,c=T.ctx,W=T.w,H=T.h; c.fillStyle='#0a1118';c.fillRect(0,0,W,H);
+  c.fillStyle='#14212e';c.fillRect(0,0,W,44);c.fillStyle='#e6eef6';c.font=`600 22px ${FD}`;
+  const insp=st.i===5;
+  c.fillText(insp?'CAM-2 · 12 MP · KIỂM TRA POKA-YOKE':'CAM-1 · 5 MP · AI THEO DÕI TAY · 30 FPS',16,30);
+  c.fillStyle='#ff4b3e';c.beginPath();c.arc(W-30,22,7,0,Math.PI*2);c.fill();c.fillStyle='#e6eef6';c.font=`500 16px ${FM}`;c.textAlign='right';c.fillText('LIVE',W-44,28);c.textAlign='left';
+  if(insp||st.i===6){
+    const cx=W/2,cy=H/2+20; c.fillStyle='#5c6876';c.fillRect(cx-240,cy-160,480,320);c.fillStyle='#c58b3c';c.fillRect(cx-145,cy-105,290,210);
+    SCREWS.forEach((p,k)=>{const x=cx+(p.x-JIG.x)*1600,y=cy+(p.z-JIG.z)*1600;c.fillStyle='#22272d';c.beginPath();c.arc(x,y,12,0,Math.PI*2);c.fill();
+      if(st.inspected){c.strokeStyle='#4be08c';c.lineWidth=3;c.strokeRect(x-22,y-22,44,44);c.fillStyle='#4be08c';c.font=`500 14px ${FM}`;c.fillText('vít 0.99',x-22,y-28);}});
+    if(!st.inspected){const yy=cy-160+320*st.scanY;c.fillStyle='rgba(80,200,255,.6)';c.fillRect(cx-240,yy-2,480,4);}
+    else {c.strokeStyle='#4be08c';c.lineWidth=3;c.strokeRect(cx-150,cy-110,300,220);c.fillStyle='#4be08c';c.font=`600 16px ${FM}`;c.fillText('BR-02 đúng hướng 0.99',cx-150,cy-118);
+      c.fillStyle='rgba(10,17,24,.8)';c.fillRect(16,H-58,W-32,44);c.fillStyle='#4be08c';c.font=`700 26px ${FD}`;c.fillText('TỶ LỆ PHÙ HỢP 98,7% ≥ 95% · ĐẠT',30,H-28);}
+    T.tex.needsUpdate=true; return;
+  }
+  // top-down schematic
+  const mx=x=>60+(x+0.9)/1.8*(W-120);
+  c.fillStyle='#16222e';c.fillRect(40,56,W-80,H-72);
+  const rows=['A','B','C']; rows.forEach((r,ri)=>{for(let k=1;k<=6;k++){const id=r+k,b=bins[id];const x=mx(b.x-BW/2),w=mx(b.x+BW/2)-x,y=70+ri*46;
+    const s=st.zone[id]; c.fillStyle='#232f3b';c.fillRect(x,y,w,38);
+    if(s){c.lineWidth=3;c.setLineDash(s==='idle'?[8,6]:[]);c.strokeStyle=s==='error'?'#ff4b3e':s==='ok'?'#4be08c':'#3a9bff';c.strokeRect(x+2,y+2,w-4,34);c.setLineDash([]);}
+    c.fillStyle='#7d8fa3';c.font=`500 14px ${FM}`;c.fillText(id,x+6,y+24);}});
+  const wy0=220; c.fillStyle='#1d2d24';c.fillRect(48,wy0,W-96,H-wy0-24);
+  const mz=z=>wy0+(z+0.10)/0.55*(H-wy0-24);
+  c.strokeStyle='#3d5a48';c.lineWidth=2;c.strokeRect(mx(JIG.x-0.2),mz(JIG.z-0.15),mx(JIG.x+0.2)-mx(JIG.x-0.2),mz(JIG.z+0.15)-mz(JIG.z-0.15));
+  c.fillStyle='#55705f';c.font=`500 14px ${FM}`;c.fillText('JIG',mx(JIG.x-0.19),mz(JIG.z-0.15)+18);
+  c.fillStyle='#d9e2ea';c.fillRect(mx(-0.88),mz(0.11),mx(-0.68)-mx(-0.88),mz(0.39)-mz(0.11));
+  const handPt=(p)=>{ if(p.z<-0.12){ let best=null,bd=9; for(const id in bins){const d=binOpen(id).distanceTo(p);if(d<bd){bd=d;best=id;}} const b=bins[best];const ri='ABC'.indexOf(best[0]); return [mx(b.x),70+ri*46+19]; } return [mx(p.x),mz(Math.min(p.z,0.44))]; };
+  [['L',arms.L.W||st.L],['R',arms.R.W||st.R]].forEach(([k,p])=>{ if(!p) return; const [x,y]=handPt(p);
+    const det=st.detect&&k==='L'; const col=det?(st.detect.ok?'#4be08c':(st.detect.id==='B3'?'#ff4b3e':'#3a9bff')):'#3a9bff';
+    c.fillStyle='rgba(91,140,210,.85)';c.beginPath();c.ellipse(x,y,22,28,0,0,Math.PI*2);c.fill();
+    c.strokeStyle=col;c.lineWidth=3;c.strokeRect(x-34,y-40,68,80);c.fillStyle=col;c.font=`600 15px ${FM}`;
+    c.fillText(`hand_${k} ${det?st.detect.conf.toFixed(2):'0.95'}`,x-34,y-48);});
+  if(st.error){c.fillStyle='rgba(179,38,30,.9)';c.fillRect(16,H-58,W-32,44);c.fillStyle='#fff';c.font=`700 26px ${FD}`;c.fillText('SAI Ô: tay trong vùng B3, yêu cầu B2 → khóa bước',30,H-28);}
+  else if(st.detect&&st.detect.ok){c.fillStyle='rgba(10,17,24,.85)';c.fillRect(16,H-58,W-32,44);c.fillStyle='#4be08c';c.font=`700 26px ${FD}`;c.fillText('XÁC NHẬN: tay trái trong vùng B2 · conf 0.97',30,H-28);}
+  T.tex.needsUpdate=true;
+}
+
+/* ---------------- apply state to scene ---------------- */
+const showFov=()=>document.getElementById('tgFov').checked;
+function applyState(now){
+  const st=computeState(); const time=now/1000;
+  // hands & operator
+  poseOperator(st.L,st.R);
+  // scanner
+  if(st.scanOn){ scanner.position.copy(arms.L.W).add(new V3(0,0.03,0)); } else scanner.position.copy(scanRest);
+  beam.visible=st.beam;
+  if(st.beam){ const h=scanner.position.clone().add(new V3(0,0.012,-0.02)); const p=beamGeo.attributes.position; const a=QR.clone().add(new V3(-0.05,0,0)),b=QR.clone().add(new V3(0.05,0,0));
+    p.setXYZ(0,h.x,h.y,h.z);p.setXYZ(1,a.x,a.y+0.003,a.z);p.setXYZ(2,b.x,b.y+0.003,b.z);p.needsUpdate=true; beamGeo.computeBoundingSphere(); beam.material.opacity=0.35+0.2*Math.sin(time*30); }
+  // bins
+  for(const id in bins){const b=bins[id],s=st.bin[id],z=st.zone[id];
+    b.hl.visible=!!s; b.pool.visible=!!s;
+    if(s){const col=s==='error'?0xff3a2e:s==='ok'?0x3cff8c:0x40ff90; b.hl.material.color.setHex(col); b.pool.material.color.setHex(col);
+      const pul=s==='target'?(0.55+0.35*(reduceMotion?1:Math.sin(time*6)*.5+.5)):s==='error'?(Math.floor(time*4)%2?1:.35):0.9; b.hl.material.opacity=pul; b.pool.material.opacity=pul*0.6;}
+    b.zone.visible=!!z; if(z) b.zone.material.color.setHex(z==='error'?0xff3a2e:z==='ok'?0x22e27a:0x3a9bff);}
+  // part held/placed
+  bracketHeld.visible=st.partHeld; if(st.partHeld){ bracketHeld.position.copy(arms.L.W).add(new V3(0.02,-0.06,0)); bracketHeld.rotation.set(0,0.1,0); }
+  bracketPlaced.visible=st.partPlaced;
+  screwHeads.forEach((g,k)=>g.visible=k<st.screwsDone);
+  sensorLed.material.color.setHex(st.partPlaced?0x2dff7a:0x3a3f45);
+  // drivers
+  drivers.forEach((d,k)=>{ if(k===0&&st.driverTip){ d.g.position.copy(st.driverTip); const tight=st.screwActive>=0&&sim.t>=SCREW_WIN[st.screwActive]+0.08; d.g.rotation.y=tight?time*25:0; } else { d.g.position.copy(d.rest); d.g.rotation.y=0; }
+    const top=d.g.position.clone().add(new V3(0,0.30,0)); const p=d.line.geometry.attributes.position; p.setXYZ(1,top.x,top.y,top.z); p.needsUpdate=true; d.line.geometry.computeBoundingSphere(); });
+  // tower
+  const blink=Math.floor(time*2.5)%2===0;
+  const on={r:st.tower==='r'&&blink,a:st.tower==='a'&&blink,g:st.tower==='g'};
+  for(const k of ['r','a','g']){ const s=towerSeg[k]; s.mat.emissiveIntensity=on[k]?2.2:0; s.glow.visible=on[k]; }
+  document.getElementById('tR').classList.toggle('on',on.r); document.getElementById('tA').classList.toggle('on',on.a); document.getElementById('tG').classList.toggle('on',on.g);
+  const tt=st.tower==='r'?'Lỗi · khóa bước':st.tower==='a'?'Chờ lệnh':'Đang chạy'; const tEl=document.getElementById('tText'); if(tEl.textContent!==tt) tEl.textContent=tt;
+  // inspection lighting
+  const insp=st.i===5; ringMat.emissiveIntensity=insp?2.4:0.15; inspLight.intensity=insp?2.2:0; cam2Fr.visible=insp;
+  // frustums
+  projFrustum.visible=showFov(); cam1Fr.visible=showFov()&&(st.i<=3);
+  // packets
+  packets.forEach((m,k)=>{ if(!st.packets){m.visible=false;return;} const u=((sim.t-0.05)/0.85)*1.6-k*0.2; if(u<0||u>1){m.visible=false;return;} m.visible=true; m.position.copy(cablePath.getPointAt(u)); });
+  // projected content
+  drawTable(st); drawProd(st); drawPanel(st); drawHMI(st); drawLive(st,now);
+  return st;
+}
+
+/* ---------------- UI ---------------- */
+const $=id=>document.getElementById(id);
+const stepsEl=$('steps'), tl=$('timeline');
+STEPS.forEach((s,k)=>{
+  const li=document.createElement('li'); li.innerHTML=`<button type="button" class="step" data-k="${k}"><span class="n">${k+1}</span><span class="t">${s.name}</span><span class="s">~${s.real} s</span></button>`; stepsEl.appendChild(li);
+  const b=document.createElement('button'); b.type='button'; b.className='seg'; b.dataset.k=k; b.setAttribute('aria-label',`Bước ${k+1}: ${s.name}`); b.innerHTML=`<i class="fill"></i><span>${k+1}</span>`; tl.appendChild(b);
+});
+stepsEl.addEventListener('click',e=>{const b=e.target.closest('.step');if(b) jump(+b.dataset.k);});
+tl.addEventListener('click',e=>{const b=e.target.closest('.seg');if(b) jump(+b.dataset.k);});
+const hwList=$('hwList'); HW.forEach(h=>{const li=document.createElement('li');li.innerHTML=`<button type="button" class="hw-item" data-a="${h.a}"><span class="code">${h.k}</span><span><b>${h.n}</b><ul>${h.s.map(x=>`<li>${x}</li>`).join('')}</ul></span></button>`;hwList.appendChild(li);});
+const swList=$('swList'); SW.forEach(h=>{const li=document.createElement('li');li.innerHTML=`<div class="hw-item" style="cursor:default"><span class="code">${h.k}</span><span><b>${h.n}</b><ul>${h.s.map(x=>`<li>${x}</li>`).join('')}</ul></span></div>`;swList.appendChild(li);});
+hwList.addEventListener('click',e=>{const b=e.target.closest('.hw-item');if(b) focusAnchor(b.dataset.a);});
+
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',String(x===t)));
+  ['p-flow','p-hw','p-sw'].forEach(p=>$(p).hidden=(p!==t.getAttribute('aria-controls')));
+}));
+
+// labels
+const ANCHORS={
+  proj:{k:'H1',n:'Máy chiếu dẫn hướng',p:new V3(0,2.19,0.03),view:[[1.2,2.5,1.5],[0,1.7,-0.05]]},
+  cam:{k:'H2',n:'Camera AI ×2',p:new V3(-0.30,2.16,0.14),view:[[-1.0,2.3,1.6],[-0.05,1.6,0.1]]},
+  led:{k:'H3',n:'Đèn LED bar / dome',p:new V3(-0.63,2.16,0.14),view:[[-1.4,2.4,1.4],[-0.2,1.9,0.0]]},
+  hmi:{k:'H4',n:'IPC & HMI',p:new V3(0,2.06,-0.39),view:[[0.6,1.85,1.5],[0,1.65,-0.35]]},
+  peri:{k:'H5',n:'Đầu đọc 2D & súng vặn vít',p:new V3(0.77,1.56,0.205),view:[[1.6,1.7,1.4],[0.45,1.2,0.1]]},
+  plc:{k:'H6',n:'PLC/IO & đèn tháp',p:new V3(0.97,1.86,-0.43),view:[[1.9,1.4,1.5],[0.6,1.0,-0.1]]},
+  jig:{k:'H7',n:'Bàn ESD & đồ gá',p:new V3(0.18,PY+0.03,0.30),view:[[0.75,1.45,0.95],[0.15,0.92,0.12]]},
+  mes:{k:'MES',n:'Server MES/SPC (HFS)',p:new V3(-1.72,1.20,-0.10),view:[[-0.3,1.5,2.3],[-1.15,0.75,-0.15]],server:true}
+};
+const labelsEl=$('labels'); const labels=[];
+for(const key in ANCHORS){const a=ANCHORS[key];const el=document.createElement('button');el.type='button';el.className='lbl'+(a.server?' server':'');el.innerHTML=`<span class="dot"></span><span class="tag"><em>${a.k}</em>${a.n}</span>`;el.addEventListener('click',()=>focusAnchor(key));labelsEl.appendChild(el);labels.push({el,a,key,tag:el.querySelector('.tag'),w:0});}
+function focusAnchor(key){const a=ANCHORS[key];flyTo(a.view[0],a.view[1]);labels.forEach(L=>L.el.classList.toggle('sel',L.key===key));document.querySelectorAll('.hw-item[data-a]').forEach(b=>b.classList.toggle('sel',b.dataset.a===key));setViewBtn(null);}
+const VIEWS={overview:[[2.2,2.35,3.05],[-0.25,1.08,0]],operator:[[-0.02,1.98,1.12],[0,1.0,-0.12]],top:[[0.01,3.7,0.55],[0,0.9,-0.02]],jig:[[0.62,1.38,0.82],[0.15,0.93,0.14]],cabinet:[[1.85,0.85,1.65],[0.45,0.5,0]]};
+function setViewBtn(v){document.querySelectorAll('.views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===v)));}
+document.querySelectorAll('.views button').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.view;flyTo(...VIEWS[v]);setViewBtn(v);labels.forEach(L=>L.el.classList.remove('sel'));}));
+let tween=null;
+function flyTo(p,t,ms){tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:new V3(...p),t1:new V3(...t),start:performance.now(),ms:reduceMotion?1:(ms||900)};}
+
+// toggles
+$('tgErr').addEventListener('change',e=>{sim.err=e.target.checked; if(sim.step===2) {sim.t=0;} renderDetail(); logLine(sim.err?'Bật mô phỏng lỗi: công nhân sẽ lấy sai ô B3 ở bước 3':'Tắt mô phỏng lỗi','info');});
+$('tgLabels').addEventListener('change',()=>{});
+$('tgOp').addEventListener('change',e=>{const v=e.target.checked;op.root.visible=v;for(const k of ['L','R']){const a=arms[k];a.up.visible=a.fo.visible=a.el.visible=a.sh.visible=v;}});
+$('speed').addEventListener('change',e=>{sim.speed=+e.target.value;});
+$('play').addEventListener('click',()=>{sim.playing=!sim.playing;syncPlay();});
+$('prev').addEventListener('click',()=>jump((sim.step+6)%7));
+$('next').addEventListener('click',()=>jump((sim.step+1)%7));
+function syncPlay(){$('playIco').textContent=sim.playing?'❚❚':'▶';$('playTxt').textContent=sim.playing?'Tạm dừng':'Chạy mô phỏng';}
+
+// log
+const logEl=$('log'); const KIND={info:'INFO',ok:'OK',err:'LỖI',data:'MES'};
+function logLine(msg,kind,clockSec){const li=document.createElement('li');li.innerHTML=`<time>${fmtClock(clockSec==null?sim.clock+STEPS[sim.step].real*sim.t:clockSec)}</time><span class="k ${kind}">${KIND[kind]||'INFO'}</span><span class="msg"></span>`;li.querySelector('.msg').textContent=msg;logEl.prepend(li);while(logEl.children.length>60) logEl.lastChild.remove();}
+function eventsFor(i){
+  const e=[];
+  if(i===0) e.push({t:0.62,k:'data',m:'Quét WO-261026-0153 → MES trả BOM, SOP v3.2, lực 0,50 N·m'});
+  if(i===1) e.push({t:0.05,k:'info',m:'Chiếu chỉ dẫn → ô B2 · khung đỡ BR-02 × 1'});
+  if(i===2){ if(!sim.err) e.push({t:0.40,k:'ok',m:'CAM-1: tay trái trong vùng B2 (0.97) → xác nhận'});
+    else { e.push({t:0.25,k:'err',m:'CAM-1: tay trong ô B3, SAI linh kiện → đèn đỏ + còi, khóa bước',fx:()=>{sim.blocked++;}}); e.push({t:0.62,k:'ok',m:'Tay vào đúng ô B2 → mở khóa bước'}); } }
+  if(i===3) e.push({t:0.60,k:'ok',m:'Đồ gá S1 ON · khung đỡ đúng vị trí'});
+  if(i===4) SCREW_WIN.forEach((a,k)=>e.push({t:a+0.15,k:'ok',m:`Vít ${k+1}/4 · ${TORQUE[k].toFixed(2).replace('.',',')} N·m · OK`}));
+  if(i===5) e.push({t:0.62,k:'ok',m:'CAM-2: tỷ lệ phù hợp 98,7% ≥ 95% → ĐẠT'});
+  if(i===6){ e.push({t:0.30,k:'data',m:`Lưu hồ sơ SN ${serial()} · 7 bước, 4 lực siết, 2 ảnh`}); e.push({t:0.80,k:'data',m:'Gửi MES/SPC · cập nhật biểu đồ lực siết'}); }
+  return e;
+}
+function fire(i,t0,t1){for(const ev of eventsFor(i)) if(ev.t>t0&&ev.t<=t1){ if(ev.fx) ev.fx(); logLine(ev.m,ev.k); }}
+function stepStart(){ logLine(`Bước ${sim.step+1}/7 · ${STEPS[sim.step].name}`,'info'); renderDetail(); }
+function jump(k){ if(sim.step===6&&k===0) sim.cycles++; sim.step=k; sim.t=0; stepStart(); }
+function advance(dt){
+  const t0=sim.t; sim.t=Math.min(1,sim.t+dt*sim.speed/stepDur(sim.step)); fire(sim.step,t0,sim.t);
+  if(sim.t>=1){ sim.clock+=STEPS[sim.step].real; if(sim.step===6){sim.cycles++;sim.step=0;} else sim.step++; sim.t=0; stepStart(); }
+}
+function renderDetail(){
+  const s=STEPS[sim.step],errMode=sim.step===2&&sim.err;
+  const roles=errMode?s.rolesErr:s.roles;
+  $('detail').innerHTML=`<h4>${sim.step+1}. ${s.name}</h4><p>${errMode?s.descErr:s.desc}</p><dl class="roles">${roles.map(r=>`<div><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('')}</dl><div class="chips">${s.actors.map(a=>`<span>${a}</span>`).join('')}</div>`;
+}
+let lastUI='';
+function syncUI(st){
+  const sig=[sim.step,st.error,Math.round(sim.t*100),sim.cycles,sim.blocked].join('|'); if(sig===lastUI) return; lastUI=sig;
+  document.querySelectorAll('.step').forEach((b,k)=>{b.classList.toggle('cur',k===sim.step);b.classList.toggle('done',k<sim.step);b.classList.toggle('errs',k===sim.step&&st.error);});
+  tl.querySelectorAll('.seg').forEach((b,k)=>{b.classList.toggle('cur',k===sim.step);b.classList.toggle('errs',k===sim.step&&st.error);b.firstChild.style.width=(k<sim.step?100:k===sim.step?sim.t*100:0)+'%';});
+  $('chipNo').textContent=`BƯỚC ${sim.step+1}/7`; $('chipName').textContent=st.error?'Lấy sai ô B3 · đã khóa bước':STEPS[sim.step].name; $('chip').classList.toggle('err',st.error);
+  $('kOk').innerHTML=`${sim.cycles}<small>sp</small>`; $('kBlk').textContent=sim.blocked;
+}
+
+/* ---------------- resize, loop ---------------- */
+function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/Math.max(h,1);camera.updateProjectionMatrix();}
+new ResizeObserver(resize).observe(host); resize();
+const pv=new V3();
+function updateLabels(){
+  const show=$('tgLabels').checked; const w=host.clientWidth,h=host.clientHeight; const vis=[];
+  for(const L of labels){ pv.copy(L.a.p).project(camera); const v=show&&pv.z<1&&Math.abs(pv.x)<1.05&&Math.abs(pv.y)<1.05; L.el.hidden=!v; if(!v) continue;
+    L.x=(pv.x*.5+.5)*w; L.y=(-pv.y*.5+.5)*h; vis.push(L); }
+  vis.sort((a,b)=>a.y-b.y); const placed=[];
+  for(const L of vis){ if(!L.w){L.w=L.el.offsetWidth;L.h=L.el.offsetHeight||24;}
+    let y=L.y-L.h/2; const x=L.x-4.5;
+    for(let it=0;it<10;it++){const hit=placed.find(p=>x<p.x+p.w&&x+L.w>p.x&&y<p.y+p.h&&y+L.h>p.y); if(!hit) break; y=hit.y+hit.h+3;}
+    placed.push({x,y,w:L.w,h:L.h});
+    L.el.style.transform=`translate(${x}px,${L.y-L.h/2}px)`; L.tag.style.transform=`translateY(${y-(L.y-L.h/2)}px)`; }
+}
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>labels.forEach(L=>{L.w=0;}));
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(0.05,(now-last)/1000); last=now;
+  if(sim.playing) advance(dt);
+  if(tween){const k=Math.min(1,(now-tween.start)/tween.ms),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;camera.position.lerpVectors(tween.p0,tween.p1,e);controls.target.lerpVectors(tween.t0,tween.t1,e);if(k>=1)tween=null;}
+  controls.update();
+  head.getWorldPosition(tmp); M.ghost.opacity=Math.min(.3,Math.max(.05,(camera.position.distanceTo(tmp)-0.35)/2.2));
+  const st=applyState(now); syncUI(st);
+  renderer.render(scene,camera); updateLabels();
+  requestAnimationFrame(loop);
+}
+controls.addEventListener('start',()=>{tween=null;setViewBtn(null);});
+
+// boot: pre-fill log as if the station has run up to step 2
+(function boot(){
+  if(host.clientWidth<640) $('tgLabels').checked=false;
+  const base=sim.clock-STEPS[0].real; logLine('Bắt đầu ca · đăng nhập NV-0217','info',base-4);
+  logLine('Bước 1/7 · Quét lệnh & tải SOP','info',base); logLine('Quét WO-261026-0153 → MES trả BOM, SOP v3.2, lực 0,50 N·m','data',base+4);
+  logLine('Bước 2/7 · Chiếu chỉ dẫn lấy linh kiện','info',sim.clock); logLine('Chiếu chỉ dẫn → ô B2 · khung đỡ BR-02 × 1','info',sim.clock);
+  renderDetail(); syncPlay();
+  let started=false; const go=()=>{if(started)return;started=true;texTable.sig=texProd.sig=texPanel.sig=texHMI.sig='';requestAnimationFrame(loop);}; setTimeout(go,1500);
+  if(document.fonts&&document.fonts.load){ Promise.all([document.fonts.load(`700 40px ${FD}`),document.fonts.load(`600 40px ${FB}`),document.fonts.load(`500 20px ${FM}`)]).then(go,go); setTimeout(()=>{texTable.sig=texProd.sig=texPanel.sig=texHMI.sig='';},2500); } else go();
+})();
+window.__pas={sim,jump,camera,controls,flyTo,VIEWS};
+})();
+</script>
+
+</body></html>

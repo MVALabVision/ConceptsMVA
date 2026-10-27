@@ -1,0 +1,62 @@
+name: Deploy Concept Studio to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Deployments queue up instead of cancelling each other, so every publish gets its own run.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate concept index
+        run: node tools/validate.mjs
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          rsync -a \
+            --exclude '.git' --exclude '.github' --exclude '_site' \
+            --exclude 'node_modules' --exclude 'tools' --exclude 'package.json' \
+            ./ _site/
+          mkdir -p _site/data
+          printf '{"commit":"%s","builtAt":"%s","runId":"%s","runNumber":"%s"}\n' \
+            "$GITHUB_SHA" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$GITHUB_RUN_ID" "$GITHUB_RUN_NUMBER" \
+            > _site/data/build.json
+          echo "build.json:" && cat _site/data/build.json
+          echo "concepts:" && ls -1 _site/concepts 2>/dev/null || true
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        continue-on-error: true
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

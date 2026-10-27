@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Concept preview host</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #0d1217; }
+    iframe { border: 0; width: 100%; height: 100%; display: block; background: #fff; }
+  </style>
+</head>
+<body>
+  <!--
+    This page is loaded by the Concept Studio inside a sandboxed iframe (opaque origin, no storage,
+    no cookies, no access to the admin session). It receives the HTML to preview via postMessage and
+    renders it in a nested sandboxed iframe so the concept's scripts can run (WebGL, Three.js, ...)
+    while remaining isolated from the admin page and its Content Security Policy.
+  -->
+  <iframe id="frame" sandbox="allow-scripts allow-pointer-lock" allow="fullscreen" title="Concept preview"></iframe>
+  <script>
+    (function () {
+      var frame = document.getElementById('frame');
+      window.addEventListener('message', function (event) {
+        if (event.source !== window.parent) return;
+        var data = event.data;
+        if (!data || typeof data.html !== 'string') return;
+        frame.srcdoc = data.html;
+      });
+      window.parent.postMessage({ ready: true }, '*');
+    })();
+  </script>
+</body>
+</html>
