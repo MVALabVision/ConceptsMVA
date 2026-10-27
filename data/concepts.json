@@ -1,7 +1,22 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-27T02:30:00.000Z",
+  "updatedAt": "2026-10-27T09:32:05.523Z",
   "concepts": [
+    {
+      "slug": "shinyei-drop-vision",
+      "name": "SHINYEI Drop Vision",
+      "project": "SYNE",
+      "description": "",
+      "status": "published",
+      "entry": "index.html",
+      "source": "html",
+      "files": 1,
+      "bytes": 114524,
+      "version": 1,
+      "createdAt": "2026-10-27T09:32:05.522Z",
+      "updatedAt": "2026-10-27T09:32:05.522Z",
+      "thumbnail": null
+    },
     {
       "slug": "tram-pas-hfs-vina",
       "name": "Trạm PAS HFS VINA",
